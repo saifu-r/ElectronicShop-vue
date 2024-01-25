@@ -1,49 +1,22 @@
 <template>
-  <div class="home">
-    <div class="section__text">
-      <div class="section__text__title">
-        <h1>The new-tech gift you are wishing for is right here</h1>
-      </div>
-      <div class="section__text__para">
-        <p>Step into the Future</p>
-      </div>
-      <div class="section__text__action">
-        <button>Browse Now--</button>
-      </div>
-    </div>
-    <div class="section__image">
-      <img src="../assets/introimg.png" alt="introimg" />
-    </div>
-  </div>
+    <intro-page></intro-page>
+    <featured-category></featured-category>
+    <top-ten></top-ten>
+  
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import IntroPage from "../components/sections/IntroPage.vue"
+import FeaturedCategory from "../components/sections/FeaturedCategory.vue"
+import TopTen from "../components/sections/TopTen.vue"
+
+export default defineComponent({
+    components:{IntroPage, FeaturedCategory, TopTen},
+});
+</script>
 
 <style scoped>
 
-.home {
-  display: flex;
-  justify-content: center;
-  gap: 5rem;
-  height: 80vh;
-  background-color: white;
-}
 
-.section__text {
-  align-self: center;
-  text-align: center;
-  width: 25rem;
-}
-.section__text__title h1{
-    font-weight: 200;
-    font-size: 2.5rem;
-
-}
-.section__text__para {
-  font-weight: 600;
-  font-size: 1rem;
-  margin: 15px;
-}
-
-.section__image img {
-  height: 500px;
-}
 </style>

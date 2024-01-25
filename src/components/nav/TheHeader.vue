@@ -1,16 +1,16 @@
 <template>
     <nav id="desktop-nav">
-        <div class="logo">StarTech</div>
+        <div class="logo"><router-link to="/home">GadgetTech</router-link></div>
         <div class="search-bar">
             <img src="../../assets/search.png" alt="search.img">
             <input type="text" name="search" id="search" placeholder="search">
         </div>
         <div>
             <ul class="nav-links">
-                <li>Offers</li>
-                <li>Contact</li>
-                <li>Account</li>
-            </ul>
+                <li><router-link to="/offers">🔥Offers</router-link></li>
+                <li><router-link to="/account">🔐Account</router-link></li>
+                <li><router-link to="/offers">📞Contact</router-link></li>
+              </ul>
         </div>
         <div class="cart">
             <img src="../../assets/cart.png" alt="cart.img">
@@ -22,6 +22,20 @@
 </template>
 
 <style scoped>
+
+a{
+  transition: all 300ms ease;
+  color: black;
+  text-decoration: none;
+  text-decoration-color: rgb(238, 150, 50);
+}
+
+a:hover{
+  color: rgb(238, 150, 50);
+  text-decoration: underline;
+  text-underline-offset: 1rem;
+  text-decoration-color: rgb(238, 150, 50);
+}
 nav, .nav-links{
   display: flex;
   background-color: #cccaca;
@@ -39,7 +53,7 @@ nav{
 }
 
 .logo{
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 .logo:hover{
   cursor: default;
