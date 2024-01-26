@@ -9,17 +9,37 @@
   </div>
 
   <div class="container">
-    <base-card mode="modified" v-for="i in 16" :key="i">
+    <base-card mode="modified" v-for="category in categories" :key="category.id">
       <template #category>
         <div class="card">
-          <img src="../../assets/cart.png" alt="" />
-          <h3>Phone</h3>
+          <img :src="category.image" alt="image" />
+          <h3>{{category.title}}</h3>
         </div>
       </template>
     </base-card>
     
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, onBeforeMount, ref } from "vue";
+import { useStore } from "vuex";
+// import x from '../../assets/category/tv.png'
+
+export default defineComponent({
+  setup() {
+    const store= useStore()
+    const categories= ref([])
+
+    onBeforeMount(()=>{
+      categories.value= store.getters.categories
+    })
+
+    return {categories}
+  },
+});
+</script>
+
 
 <style scoped>
 
