@@ -1,13 +1,9 @@
 <template>
     <base-card mode="normal">
-        <form>
+        <form @submit.prevent="submitForm">
             <div class="upper-container">
                 <div class="header">
                     <h3>Registration Account</h3>
-                    
-                    <input type="checkbox" >
-
-
                 </div>
 
                 <div class="name">
@@ -40,7 +36,7 @@
             <div class="lower-container">
                 <button>Continue</button>
                 <p>---------- Already have an account? ----------</p>
-                <p>If you already have an account, please login</p>
+                <p>If you already have an account, please <b @click="toggleComponent">LOGIN</b></p>
             </div>
 
         </form>
@@ -48,18 +44,32 @@
     </base-card>
 </template>
 
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+
+export default defineComponent({
+    emit: ['toggle-component'],
+    setup(context, { emit }) {
+        const component = ref('login-component')
+        const toggleComponent = () => {
+            emit('toggle-component', component.value)
+        }
+
+        const submitForm = () => {
+            console.log("hello");
+        }
+        return { submitForm, toggleComponent }
+    },
+});
+</script>
+
 <style scoped>
 .upper-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-.header{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: space-between;
-}
+
 
 
 .name {
@@ -91,8 +101,14 @@ input {
 }
 
 button {
+    margin-top: 20px;
     padding: 12px;
     width: 300px;
 
+}
+
+b {
+    color: blue;
+    cursor: pointer;
 }
 </style>
