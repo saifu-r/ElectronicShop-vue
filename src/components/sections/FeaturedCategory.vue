@@ -9,7 +9,7 @@
   </div>
 
   <div class="container">
-    <base-card mode="modified" v-for="category in categories" :key="category.id">
+    <base-card mode="modified" v-for="category in categories" :key="category.id" @click="showCategory(category.title)">
       <template #category>
         <div class="card">
           <img :src="category.image" alt="image" />
@@ -35,7 +35,12 @@ export default defineComponent({
       categories.value= store.getters.categories
     })
 
-    return {categories}
+    const showCategory= (category: string)=>{
+      alert('The category is '+ category)
+      
+    }
+
+    return {categories, showCategory}
   },
 });
 </script>
@@ -56,15 +61,14 @@ export default defineComponent({
   justify-content: center;
   flex-wrap: wrap;
   gap: 3rem;
-
   padding: 30px;
-
 }
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  cursor: pointer;
 
 }
 

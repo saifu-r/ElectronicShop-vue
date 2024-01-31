@@ -4,7 +4,7 @@
 
 
     <register-component @toggle-component="setselectedComponent" v-if="selectedComponent ==='register-component'"></register-component>
-    <login-component @toggle-component="setselectedComponent" v-if="selectedComponent ==='login-component'"></login-component>
+    <login-component @toggle-component="setselectedComponent" v-else></login-component>
 
     
 </template>

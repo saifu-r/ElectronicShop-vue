@@ -7,11 +7,11 @@
                 </div>
                 <div class="form-control">
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Email">
+                    <input type="email" name="email" id="email" placeholder="Email" v-model="email">
                 </div>
                 <div class="form-control">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" v-model="password">
                 </div>
             </div>
 
@@ -36,10 +36,15 @@ export default defineComponent({
             emit('toggle-component', component.value)
         }
 
+        const email= ref('')
+        const password= ref('')
+
         const submitForm = () => {
-            console.log("hello");
+            console.log('the password is '+ password.value);
+
+
         }
-        return { toggleComponent, submitForm }
+        return { toggleComponent,email, password, submitForm }
     },
 });
 </script>

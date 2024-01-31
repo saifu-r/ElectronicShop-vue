@@ -10,6 +10,7 @@
                 <li><router-link to="/offers">🔥Offers</router-link></li>
                 <li><router-link to="/account">🔐Account</router-link></li>
                 <li><router-link to="/offers">📞Contact</router-link></li>
+                <li><router-link to="/admin">🔑</router-link></li>
               </ul>
         </div>
         <div class="cart">
