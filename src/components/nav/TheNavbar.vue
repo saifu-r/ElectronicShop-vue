@@ -1,6 +1,6 @@
 <template>
-    <nav :class="{active: !isMobileMenuOpen}">
-        <div class="navbar-row first-row" >
+    <nav :class="{ active: !isMobileMenuOpen }">
+        <div class="navbar-row first-row">
             <div class="title" v-if="isMobileMenuOpen">
                 <h2>Gadget Shop</h2>
             </div>
@@ -33,17 +33,18 @@
                 </div>
                 <div class="list">
                     <ul>
-                        <li>
-                            <img src="../../assets/admin/product.png" alt="product.img">
-                            <h5>Product Page</h5>
+                        <li><router-link to="/hh">
+                                <img src="../../assets/admin/product.png" alt="product.img">
+                                <h5>Product Page</h5>
+                            </router-link>
                         </li>
-                        <li>
+                        <li><router-link to="/hh">
                             <img src="../../assets/admin/order.png" alt="order.img">
-                            <h5>Orders</h5>
+                            <h5>Orders</h5></router-link>
                         </li>
-                        <li>
+                        <li><router-link to="/hh">
                             <img src="../../assets/admin/shipment.png" alt="shipment.img">
-                            <h5>Shipment</h5>
+                            <h5>Shipment</h5></router-link>
                         </li>
                     </ul>
                 </div>
@@ -90,7 +91,7 @@ nav {
     transition: transform 0.3s ease-in-out;
 }
 
-nav.active{
+nav.active {
     width: auto;
     height: 100vh;
     position: fixed;
@@ -157,6 +158,12 @@ img {
 
 li {
     list-style: none;
+
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
     display: flex;
     flex-direction: row;
     margin: 5px 0;
