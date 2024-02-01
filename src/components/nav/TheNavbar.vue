@@ -33,16 +33,16 @@
                 </div>
                 <div class="list">
                     <ul>
-                        <li><router-link to="/hh">
+                        <li><router-link to="/admin/products">
                                 <img src="../../assets/admin/product.png" alt="product.img">
                                 <h5>Product Page</h5>
                             </router-link>
                         </li>
-                        <li><router-link to="/hh">
+                        <li><router-link to="/admin/order">
                             <img src="../../assets/admin/order.png" alt="order.img">
                             <h5>Orders</h5></router-link>
                         </li>
-                        <li><router-link to="/hh">
+                        <li><router-link to="/admin/shipment">
                             <img src="../../assets/admin/shipment.png" alt="shipment.img">
                             <h5>Shipment</h5></router-link>
                         </li>
@@ -51,6 +51,7 @@
             </div>
         </div>
     </nav>
+
 </template>
 
 
@@ -79,9 +80,9 @@ export default defineComponent({
 <style scoped>
 nav {
     width: 15rem;
-    height: 100vh;
-    background-color: #727171;
-    color: #fff;
+    height: 100%;
+    background-color: #6ebfb6;
+    color: #e6debd;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -133,7 +134,7 @@ img {
     width: auto;
     border: 1px solid black;
     padding: 0 5px;
-    background: white;
+    background: #e6debd;
 
 }
 
@@ -143,7 +144,9 @@ img {
     margin-right: 10px;
     /* Adjust the spacing between the icon and input field */
 }
-
+.search-bar input{
+    background: #e6debd;
+}
 #search {
     border: none;
     outline: none;
@@ -163,7 +166,7 @@ li {
 
 a {
     text-decoration: none;
-    color: #fff;
+    color: #e6debd;
     display: flex;
     flex-direction: row;
     margin: 5px 0;
@@ -182,7 +185,7 @@ a {
 .line {
     height: 3px;
     width: 30px;
-    background-color: #fff;
+    background-color: #e6debd;
     margin: 6px 0;
     transition: 0.4s;
 }
