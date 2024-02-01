@@ -1,7 +1,12 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { db, storage } from "@/firebase";
 
 export default createStore({
   state: {
@@ -24,7 +29,17 @@ export default createStore({
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
 
-    products: [],
+    products: [
+      {
+        name: "",
+        price: "",
+        description: "",
+        category: "",
+        brand: "",
+        imageUrl: "",
+        timestamp: "",
+      },
+    ],
   },
   getters: {
     categories(state) {
@@ -38,31 +53,56 @@ export default createStore({
     fetchProducts(state, payload) {
       state.products = payload;
     },
-    saveProduct(state, payload){
-      state.products.push(payload)
-    }
+    saveProduct(state, payload) {
+      state.products.push(payload);
+    },
   },
+
   actions: {
     async fetchProducts(context) {
       const products = ref();
       try {
-        // Reference to the "products" collection
         const productsCollection = collection(db, "products");
-
-        // Fetch documents from the collection
         const querySnapshot = await getDocs(productsCollection);
-
-        // Map the documents to an array
         products.value = querySnapshot.docs.map((doc) => doc.data());
-        // console.log("Fetched Products:", products);
-        // console.log(products.value);
-
-        // console.log("hello");
-        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      context.commit('fetchProducts', products)
+      context.commit("fetchProducts", products);
+    },
+
+
+    async saveProduct(context, payload) {
+      const fileName = `product_${Date.now()}_${payload.name}`;
+      const storageReference = storageRef(storage, "products/" + fileName);
+
+      try {
+        await uploadBytes(storageReference, payload.photo);
+        const downloadURL = await getDownloadURL(storageReference);
+        const productsCollection = collection(db, "products");
+
+
+        const newProduct= {
+          name: payload.name,
+          price: payload.price,
+          description: payload.description,
+          category: payload.category,
+          brand: payload.brand,
+          imageUrl: downloadURL,
+          timestamp: Timestamp.now(),
+        }
+
+        console.log(payload);
+        
+
+        await addDoc(productsCollection, newProduct);
+        console.log("File uploaded successfully. Download URL:", downloadURL);
+        context.commit('saveProduct', newProduct)
+      } catch (error) {
+        console.error("Error uploading file or storing product data:", error);
+      }
+
+     
     },
   },
   modules: {},

@@ -14,7 +14,7 @@
         </div>
 
         <!-- Table data rows -->
-        <div class="table-row" v-for="(product, index) in products" :key="index">
+        <div class="table-row" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
             <div>{{ product.name }}</div>
             <div>{{ product.price }}</div>
             <div class="modification-buttons">
@@ -23,8 +23,6 @@
             </div>
         </div>
     </base-card>
-
-
 
     <base-dialog v-if="openAddDialog" title="Add New Product" @close="confirmError">
         <template #default>
@@ -38,49 +36,52 @@
     </base-dialog>
 </template>
   
-<script>
-import { ref, onMounted, computed } from "vue";
+<script lang="ts">
+import { ref, onMounted, computed, defineComponent  } from "vue";
 import AddProduct from './AddProduct.vue'
 import { useStore } from "vuex";
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase';
 
-export default {
+
+export default defineComponent({
     components: { AddProduct },
     setup() {
         const store = useStore();
         const products = computed(() => store.getters.products);
         const tableName = "Product List";
         const openAddDialog = ref(false)
-
+        const openDetailDialog = ref(false)
 
         const addRow = () => {
             openAddDialog.value = true
         };
         const confirmError = () => {
             openAddDialog.value = false;
+            openDetailDialog.value = false;
         };
+
 
 
         // Function to fetch data from Firestore
         const fetchData = async() => {
             await store.dispatch('fetchProducts')
-            // console.log(products);
         };
 
-        // Call the fetchData function when the component is mounted
         onMounted(() => {
             fetchData();
         });
+
+        const showDetails= (product: string)=>{
+            alert(product)
+        }
 
         return {
             tableName,
             addRow,
             openAddDialog,
-            confirmError, products
+            confirmError, products, showDetails
         };
     },
-};
+});
 </script>
   
 <style scoped>

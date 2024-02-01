@@ -1,6 +1,6 @@
 <template>
     <base-card>
-        <form @submit.prevent="uploadData">
+        <form @submit.prevent="saveProduct">
             <h2>Add a product</h2>
             <div class="form-control">
                 <label for="name">Name of the product:</label>
@@ -49,14 +49,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue";
-import { db, storage } from '@/firebase'
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import BaseButton from "@/components/ui/BaseButton.vue";
+import { useStore } from "vuex";
+
 
 export default defineComponent({
-    components: { BaseButton },
     setup() {
+        const store = useStore()
         const selectedCategory = ref('')
         const selectedBrand = ref('')
         const availableBrands = ref<string[]>([]);
@@ -110,43 +108,18 @@ export default defineComponent({
             selectedPhoto.value = file
         }
 
-        const uploadData = async () => {
-            if (!selectedPhoto.value) {
-                console.error('No file selected for upload.');
-                return;
+        const saveProduct = () => {
+            const productData = {
+                name: selectedName.value,
+                price: selectedPrice.value,
+                description: selectedDescription.value,
+                category: selectedCategory.value,
+                brand: selectedBrand.value,
+                photo: selectedPhoto.value
             }
-
-            // Generate a unique filename (you may want to implement your own logic)
-            const fileName = `product_${Date.now()}_${selectedPhoto.value.name}`;
-
-            const storageReference = storageRef(storage, 'products/' + fileName);
-
-            try {
-                // Upload the image file to Firebase Storage
-                await uploadBytes(storageReference, selectedPhoto.value);
-
-                // Get the download URL of the uploaded file
-                const downloadURL = await getDownloadURL(storageReference);
-
-                // Save product metadata to Firestore (replace 'products' with your collection name)
-                const productsCollection = collection(db, 'products');
-                await addDoc(productsCollection, {
-                    name: selectedName.value,
-                    price: selectedPrice.value,
-                    description: selectedDescription.value,
-                    category: selectedCategory.value,
-                    brand: selectedBrand.value,
-                    imageUrl: downloadURL,
-                    timestamp: Timestamp.now()
-                });
-
-                // Log the download URL or do further processing
-                console.log("File uploaded successfully. Download URL:", downloadURL);
-            } catch (error) {
-                console.error("Error uploading file or storing product data:", error);
-            }
-        };
-        return { selectedName, selectedCategory, selectedBrand, availableBrands, updateBrands, selectedDescription, selectedPrice, selectedPhoto, uploadData, handleFileChange }
+            store.dispatch('saveProduct', productData)
+        }
+        return { selectedName, selectedCategory, selectedBrand, availableBrands, updateBrands, selectedDescription, selectedPrice, selectedPhoto, handleFileChange, saveProduct }
     },
 });
 </script> 
