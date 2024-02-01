@@ -18,8 +18,8 @@
             <div>{{ product.name }}</div>
             <div>{{ product.price }}</div>
             <div class="modification-buttons">
-                <base-button mode="outline">Edit</base-button>
-                <base-button mode="outline">Delete</base-button>
+                <base-button mode="outline" @click.stop="editProduct">Edit</base-button>
+                <base-button mode="outline" @click.stop="deleteProduct(product.name)">Delete</base-button>
             </div>
         </div>
     </base-card>
@@ -31,7 +31,6 @@
 
         <template #actions>
             <base-button mode="flat" @click="confirmError">Close</base-button>
-            <base-button mode="flat" @click="confirmError">Save</base-button>
         </template>
     </base-dialog>
 </template>
@@ -74,11 +73,21 @@ export default defineComponent({
             alert(product)
         }
 
+        const editProduct= ()=>{
+            console.log("hello");
+            
+        }
+        const deleteProduct= (name: string)=>{
+            store.dispatch('deleteProduct', name);
+            alert("Deleting: " + name);
+            
+        }
+
         return {
             tableName,
             addRow,
             openAddDialog,
-            confirmError, products, showDetails
+            confirmError, products, showDetails, editProduct, deleteProduct
         };
     },
 });

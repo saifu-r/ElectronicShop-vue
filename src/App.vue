@@ -40,4 +40,29 @@ body{
 html{
   scroll-behavior: smooth;
 }
+
+/* For Chrome, Safari, and newer Edge */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle on active */
+::-webkit-scrollbar-thumb:active {
+  background-color: #555;
+}
 </style>

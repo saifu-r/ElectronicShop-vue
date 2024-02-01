@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc  } from "firebase/firestore";
 import {
   ref as storageRef,
   uploadBytes,
@@ -56,6 +56,10 @@ export default createStore({
     saveProduct(state, payload) {
       state.products.push(payload);
     },
+    deleteProduct(state, payload) {
+      state.products = state.products.filter(product => product.name !== payload);
+    },
+
   },
 
   actions: {
@@ -81,7 +85,6 @@ export default createStore({
         const downloadURL = await getDownloadURL(storageReference);
         const productsCollection = collection(db, "products");
 
-
         const newProduct= {
           name: payload.name,
           price: payload.price,
@@ -92,17 +95,36 @@ export default createStore({
           timestamp: Timestamp.now(),
         }
 
-        console.log(payload);
-        
-
         await addDoc(productsCollection, newProduct);
         console.log("File uploaded successfully. Download URL:", downloadURL);
         context.commit('saveProduct', newProduct)
       } catch (error) {
         console.error("Error uploading file or storing product data:", error);
       }
+    },
 
-     
+    async deleteProduct(context, payload) {
+      try {
+        // Reference to the "products" collection
+        const productsCollection = collection(db, "products");
+  
+        // Query the collection for the document with the specified name
+        const querySnapshot = await getDocs(
+          query(productsCollection, where("name", "==", payload))
+        );
+  
+        // If a document is found, delete it
+        if (querySnapshot.size > 0) {
+          const productDoc = querySnapshot.docs[0];
+          await deleteDoc(productDoc.ref);
+          console.log(`Product '${payload}' deleted successfully.`);
+          context.commit('deleteProduct', payload);
+        } else {
+          console.warn(`Product '${payload}' not found.`);
+        }
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
     },
   },
   modules: {},

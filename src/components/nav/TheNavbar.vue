@@ -35,7 +35,7 @@
                     <ul>
                         <li><router-link to="/admin/products">
                                 <img src="../../assets/admin/product.png" alt="product.img">
-                                <h5>Product Page</h5>
+                                <h5>Product List</h5>
                             </router-link>
                         </li>
                         <li><router-link to="/admin/order">
@@ -81,7 +81,7 @@ export default defineComponent({
 nav {
     width: 15rem;
     height: 100%;
-    background-color: #6ebfb6;
+    background-color: #787e90;
     color: #e6debd;
     padding: 10px;
     display: flex;
@@ -172,6 +172,13 @@ a {
     margin: 5px 0;
     padding: 5px;
     align-items: center;
+    border-radius: 5px;
+}
+a:active,
+a:hover,
+a.router-link-active{
+    background-color: #989eb1;
+    color: #ece9dc;
 }
 
 .hamburger-icon {
@@ -189,6 +196,7 @@ a {
     margin: 6px 0;
     transition: 0.4s;
 }
+
 
 .line1-open {
     transform: rotate(-45deg) translate(-6px, 6px);
