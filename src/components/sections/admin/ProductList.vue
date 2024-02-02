@@ -7,21 +7,25 @@
         </div>
 
         <!-- Table headings row -->
-        <div class="table-row table-headings">
-            <div>Product</div>
-            <div>Price(TK)</div>
-            <div>Modify</div>
-        </div>
-
-        <!-- Table data rows -->
-        <div class="table-row" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
-            <div>{{ product.name }}</div>
-            <div>{{ product.price }}</div>
-            <div class="modification-buttons">
-                <base-button mode="outline" @click.stop="editProduct">Edit</base-button>
-                <base-button mode="outline" @click.stop="deleteProduct(product.name)">Delete</base-button>
-            </div>
-        </div>
+        <table>
+            <thead>
+                <tr class="table-headings">
+                    <th>Product</th>
+                    <th>Price(TK)</th>
+                    <th>Modify</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td class="modification-buttons">
+                        <base-button mode="outline" @click.stop="editProduct">Edit</base-button>
+                        <base-button mode="outline" @click.stop="deleteProduct(product.name)">Delete</base-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </base-card>
 
     <base-dialog v-if="openAddDialog" title="Add New Product" @close="confirmError">
@@ -36,7 +40,7 @@
 </template>
   
 <script lang="ts">
-import { ref, onMounted, computed, defineComponent  } from "vue";
+import { ref, onMounted, computed, defineComponent } from "vue";
 import AddProduct from './AddProduct.vue'
 import { useStore } from "vuex";
 
@@ -58,10 +62,8 @@ export default defineComponent({
             openDetailDialog.value = false;
         };
 
-
-
         // Function to fetch data from Firestore
-        const fetchData = async() => {
+        const fetchData = async () => {
             await store.dispatch('fetchProducts')
         };
 
@@ -69,20 +71,18 @@ export default defineComponent({
             fetchData();
         });
 
-        const showDetails= (product: string)=>{
+        const showDetails = (product: string) => {
             alert(product)
         }
 
-        const editProduct= ()=>{
+        const editProduct = () => {
             console.log("hello");
-            
         }
-        const deleteProduct= (name: string)=>{
+        const deleteProduct = (name: string) => {
             store.dispatch('deleteProduct', name);
             alert("Deleting: " + name);
-            
+            fetchData();
         }
-
         return {
             tableName,
             addRow,
@@ -94,7 +94,6 @@ export default defineComponent({
 </script>
   
 <style scoped>
-/* Add your styles for the table here */
 .table-header {
     display: flex;
     justify-content: space-between;
@@ -105,10 +104,16 @@ export default defineComponent({
     margin: 0;
 }
 
-.table-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    padding: 30px;
+    text-align: left;
     border-bottom: 1px solid #ddd;
 }
 

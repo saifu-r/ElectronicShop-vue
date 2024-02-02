@@ -1,6 +1,6 @@
 <template>
     <nav id="desktop-nav">
-        <div class="logo"><router-link to="/home">GadgetTech</router-link></div>
+        <div class="logo"><router-link to="/gadget-shop">GadgetTech</router-link></div>
         <div class="search-bar">
             <img src="../../assets/search.png" alt="search.img">
             <input type="text" name="search" id="search" placeholder="search">

@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="section__image">
-        <img src="../../assets/introimg.png" alt="introimg" />
+        <img src="../../../assets/introimg.png" alt="introimg" />
       </div>
     </div>
   </template>

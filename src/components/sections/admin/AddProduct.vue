@@ -1,50 +1,53 @@
 <template>
-    <base-card>
-        <form @submit.prevent="saveProduct">
-            <h2>Add a product</h2>
-            <div class="form-control">
-                <label for="name">Name of the product:</label>
-                <input type="text" name="name" id="name" v-model="selectedName">
-            </div>
-            <div class="form-control">
-                <label for="category">Please select the catagory of the item: </label>
-                <select name="category" id="category" v-model="selectedCategory" @change="updateBrands">
-                    <option value="phone">Phone</option>
-                    <option value="laptop">Laptop</option>
-                    <option value="tv">TV</option>
-                    <option value="headphone">Headphone</option>
-                    <option value="smart-watch">Smart Watch</option>
-                    <option value="camera">Camera</option>
-                    <option value="printer">Printer</option>
-                    <option value="monitor">Monitor</option>
-                    <option value="keyboard">Keyboard</option>
-                    <option value="mouse">Mouse</option>
-                </select>
-            </div>
-            <div class="form-control">
-                <label for="brand">Please select the brand: </label>
-                <select name="category" id="category" v-model="selectedBrand">
-                    <option v-for="brand in availableBrands" :key="brand" :value="brand">{{ brand }}</option>
-                </select>
-            </div>
-            <div class="form-control">
-                <label for="description">Description of the product:</label>
-                <textarea name="description" id="description" cols="30" rows="5" v-model="selectedDescription"></textarea>
-            </div>
-            <div class="form-control">
-                <label for="price">Price of the product:</label>
-                <input type="number" name="price" id="price" min="100" v-model="selectedPrice">
-            </div>
-            <div class="form-control">
-                <label for="photo">Upload the product photo here:</label>
-                <input type="file" name="photo" id="photo" @change="handleFileChange" ref="fileInput">
-            </div>
-            <div class="lower-container">
-                <base-button>Add</base-button>
-            </div>
+    <div class="container">
+        <base-card>
+            <form @submit.prevent="saveProduct">
+                <h2>Add a product</h2>
+                <div class="form-control">
+                    <label for="name">Name of the product:</label>
+                    <input type="text" name="name" id="name" v-model="selectedName">
+                </div>
+                <div class="form-control">
+                    <label for="category">Please select the catagory of the item: </label>
+                    <select name="category" id="category" v-model="selectedCategory" @change="updateBrands">
+                        <option value="phone">Phone</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="tv">TV</option>
+                        <option value="headphone">Headphone</option>
+                        <option value="smart-watch">Smart Watch</option>
+                        <option value="camera">Camera</option>
+                        <option value="printer">Printer</option>
+                        <option value="monitor">Monitor</option>
+                        <option value="keyboard">Keyboard</option>
+                        <option value="mouse">Mouse</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="brand">Please select the brand: </label>
+                    <select name="category" id="category" v-model="selectedBrand">
+                        <option v-for="brand in availableBrands" :key="brand" :value="brand">{{ brand }}</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="description">Description of the product:</label>
+                    <textarea name="description" id="description" cols="30" rows="5"
+                        v-model="selectedDescription"></textarea>
+                </div>
+                <div class="form-control">
+                    <label for="price">Price of the product:</label>
+                    <input type="number" name="price" id="price" min="100" v-model="selectedPrice">
+                </div>
+                <div class="form-control">
+                    <label for="photo">Upload the product photo here:</label>
+                    <input type="file" name="photo" id="photo" @change="handleFileChange" ref="fileInput">
+                </div>
+                <div class="lower-container">
+                    <base-button>Add</base-button>
+                </div>
 
-        </form>
-    </base-card>
+            </form>
+        </base-card>
+    </div>
 </template>
 
 <script lang="ts">
@@ -125,6 +128,7 @@ export default defineComponent({
 </script> 
 
 <style scoped>
+
 .form-control {
     display: flex;
     flex-direction: column;

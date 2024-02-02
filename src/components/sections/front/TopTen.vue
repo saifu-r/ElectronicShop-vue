@@ -9,14 +9,15 @@
   </div>
 
   <div class="container">
-    <base-card mode="modified" v-for="(product, index) in products" :key="index">
+    <base-card mode="modified" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
       <template #category>
-        <div class="card">
-          <img :src='product.imageUrl' alt='image' style="width: 150px;"/>
-          <p>{{ product.name }}</p>
-          <h3>Price: {{ product.price }} TK </h3>
-
-        </div>
+        <router-link :to="productDetails">
+          <div class="card">
+            <img :src='product.imageUrl' alt='image' style="width: 150px;" />
+            <p>{{ product.name }}</p>
+            <h3>Price: {{ product.price }} TK </h3>
+          </div>
+        </router-link>
       </template>
     </base-card>
 
@@ -39,7 +40,18 @@ export default defineComponent({
     onMounted(() => {
       fetchData();
     });
-    return { products }
+
+    const productName = ref('')
+    const showDetails = (prodName: string) => {
+      productName.value = prodName
+    }
+
+    const productDetails = computed(() => {
+      return '/gadget-shop/' + productName.value
+    })
+
+
+    return { products, showDetails, productDetails }
 
 
   },
@@ -61,8 +73,7 @@ export default defineComponent({
   justify-content: center;
   flex-wrap: wrap;
   gap: 3rem;
-  padding: 30px;
-
+  padding: 30px
 }
 
 .card {
@@ -71,7 +82,8 @@ export default defineComponent({
   align-items: center;
   padding: 20px;
   max-width: 220px;
-
+  max-height: 220px;
+  cursor: pointer;
 }
 
 .card h3 {
@@ -82,6 +94,15 @@ export default defineComponent({
 
 .card img {
   height: 10rem;
+  width: 10rem;
 
+}
+
+p {
+  text-align: center;
+}
+a{
+  text-decoration: none;
+  color: black;
 }
 </style>
