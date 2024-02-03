@@ -23,29 +23,29 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
-
+import Product from '@/types/Product'
 
 export default defineComponent({
     props: ['prodName'],
     setup(props) {
         const store = useStore()
-        const selectedProduct= ref('')
+        const selectedProduct= ref<Product | null>(null)
 
         onBeforeMount(()=>{
-            selectedProduct.value= store.getters.products.find((product)=> product.name=== props.prodName)
+            selectedProduct.value= store.getters.products.find((product : Product)=> product.name=== props.prodName) || null
         })
 
         const brand= computed(()=>{
-            return selectedProduct.value.brand
+            return selectedProduct.value?.brand || ''
         })
         const description= computed(()=>{
-            return selectedProduct.value.description
+            return selectedProduct.value?.description || ''
         })
         const price= computed(()=>{
-            return selectedProduct.value.price
+            return 'Price: $' + (selectedProduct.value?.price || '')
         })
         const image= computed(()=>{
-            return selectedProduct.value.imageUrl
+            return selectedProduct.value?.imageUrl || ''
         })
 
         return {selectedProduct, brand, description, price, image}

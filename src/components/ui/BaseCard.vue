@@ -48,9 +48,7 @@ export default defineComponent({
 .modified {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
-
-
+  padding: 0.1rem;
 }
 .image {
   height: 20px;

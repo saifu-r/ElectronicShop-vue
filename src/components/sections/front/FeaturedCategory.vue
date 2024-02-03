@@ -9,7 +9,7 @@
   </div>
 
   <div class="container">
-    <base-card mode="modified" v-for="category in categories" :key="category.id" @click="showCategory(category.title)">
+    <base-card mode="modified" v-for="category in categories" :key="category" @click="showCategory(category.title)">
       <template #category>
         <div class="card">
           <img :src="category.image" alt="image" />
@@ -24,12 +24,13 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
+import Category from '@/types/Category'
 // import x from '../../assets/category/tv.png'
 
 export default defineComponent({
   setup() {
     const store= useStore()
-    const categories= ref([])
+    const categories= ref<Category[]>([])
 
     onBeforeMount(()=>{
       categories.value= store.getters.categories
@@ -47,6 +48,9 @@ export default defineComponent({
 
 
 <style scoped>
+*{
+  background-color: #f2f4f8;
+}
 
 .title__container{
     display: flex;
@@ -62,18 +66,26 @@ export default defineComponent({
   flex-wrap: wrap;
   gap: 3rem;
   padding: 30px;
+
 }
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 40px;
   cursor: pointer;
+  background-color: #fff;
+  border-radius: 12px;
 
 }
 
-.card img {
+.card img{
   height: 4rem;
+  background-color: #fff;
+}
+
+.card h3{
+  background-color: #fff;
 }
 
 </style>

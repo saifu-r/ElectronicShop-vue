@@ -9,29 +9,30 @@
   </div>
 
   <div class="container">
-    <base-card mode="modified" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
-      <template #category>
-        <router-link :to="productDetails">
+    <router-link :to="productDetails">
+      <base-card mode="modified" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
+        <template #category>
           <div class="card">
             <img :src='product.imageUrl' alt='image' style="width: 150px;" />
             <p>{{ product.name }}</p>
-            <h3>Price: {{ product.price }} TK </h3>
+            <h3>Price: ${{ product.price }}</h3>
           </div>
-        </router-link>
-      </template>
-    </base-card>
-
+        </template>
+      </base-card>
+    </router-link>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
+
+import Product from '@/types/Product'
 
 export default defineComponent({
   setup() {
     const store = useStore()
-    const products = computed(() => store.getters.products);
+    const products = computed<Product[]>(() => store.getters.products);
 
     const fetchData = async () => {
       await store.dispatch('fetchProducts')
@@ -50,7 +51,6 @@ export default defineComponent({
       return '/gadget-shop/' + productName.value
     })
 
-
     return { products, showDetails, productDetails }
 
 
@@ -59,6 +59,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+*{
+  background-color: #f2f4f8;
+}
 .title__container {
   display: flex;
   flex-direction: column;
@@ -68,7 +71,7 @@ export default defineComponent({
 
 }
 
-.container {
+.container a{
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -84,12 +87,15 @@ export default defineComponent({
   max-width: 220px;
   max-height: 220px;
   cursor: pointer;
+  background-color: #fff;
+  border-radius: 12px;
 }
 
 .card h3 {
   padding-top: 20px;
   display: flex;
   justify-content: flex-start;
+  background-color: #fff;
 }
 
 .card img {
@@ -100,8 +106,10 @@ export default defineComponent({
 
 p {
   text-align: center;
+  background-color: #fff;
 }
-a{
+
+a {
   text-decoration: none;
   color: black;
 }

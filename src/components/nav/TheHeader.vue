@@ -32,14 +32,14 @@ a{
 }
 
 a:hover{
-  color: rgb(238, 150, 50);
+  color: #fff;
   text-decoration: underline;
   text-underline-offset: 1rem;
-  text-decoration-color: rgb(238, 150, 50);
+  text-decoration-color: #fff;
 }
 nav, .nav-links{
   display: flex;
-  background-color: #cccaca;
+  background-color: #787e90;
 }
 nav{
   justify-content: space-around;

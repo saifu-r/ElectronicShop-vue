@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
 import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc  } from "firebase/firestore";
+import Product from '@/types/Product'
 import {
   ref as storageRef,
   uploadBytes,
@@ -29,16 +30,8 @@ export default createStore({
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
 
-    products: [
-      {
-        name: "",
-        price: "",
-        description: "",
-        category: "",
-        brand: "",
-        imageUrl: "",
-        timestamp: "",
-      },
+    products: <Product[]>[
+      
     ],
   },
   getters: {
