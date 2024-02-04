@@ -91,6 +91,10 @@ export default defineComponent({
   border-radius: 12px;
 }
 
+.card:hover{
+  transform: scale(1.05);
+}
+
 .card h3 {
   padding-top: 20px;
   display: flex;

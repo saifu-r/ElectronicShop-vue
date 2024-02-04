@@ -9,6 +9,7 @@
   </div>
 
   <div class="container">
+    <router-link :to="categoryProducts">
     <base-card mode="modified" v-for="category in categories" :key="category" @click="showCategory(category.title)">
       <template #category>
         <div class="card">
@@ -17,15 +18,15 @@
         </div>
       </template>
     </base-card>
+  </router-link>
     
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
 import Category from '@/types/Category'
-// import x from '../../assets/category/tv.png'
 
 export default defineComponent({
   setup() {
@@ -36,12 +37,16 @@ export default defineComponent({
       categories.value= store.getters.categories
     })
 
-    const showCategory= (category: string)=>{
-      alert('The category is '+ category)
-      
+    const category= ref('')
+    const showCategory= (categ: string)=>{
+      category.value= categ
     }
 
-    return {categories, showCategory}
+    const categoryProducts= computed(()=>{
+      return '/gadget-shop/c/'+ category.value
+    })
+
+    return {categories, showCategory, categoryProducts}
   },
 });
 </script>
@@ -60,14 +65,17 @@ export default defineComponent({
     gap: 10px;
 
 }
-.container {
+.container a{
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 3rem;
   padding: 30px;
+  text-decoration: none;
+  color: black;
 
 }
+
 .card {
   display: flex;
   flex-direction: column;
@@ -77,6 +85,10 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 12px;
 
+}
+
+.card:hover{
+  transform: scale(1.05);
 }
 
 .card img{

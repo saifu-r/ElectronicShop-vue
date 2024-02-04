@@ -15,14 +15,8 @@ export default createStore({
       { image: require("../assets/category/phone.png"), title: "Phone" },
       { image: require("../assets/category/laptop.png"), title: "Laptop" },
       { image: require("../assets/category/tv.png"), title: "TV" },
-      {
-        image: require("../assets/category/headphone.png"),
-        title: "Headphone",
-      },
-      {
-        image: require("../assets/category/smartwatch.png"),
-        title: "Smart Watch",
-      },
+      { image: require("../assets/category/headphone.png"),title: "Headphone"},
+      { image: require("../assets/category/smartwatch.png"),title: "Smart Watch",},
       { image: require("../assets/category/camera.png"), title: "Camera" },
       { image: require("../assets/category/printer.png"), title: "Printer" },
       { image: require("../assets/category/monitor.png"), title: "Monitor" },
@@ -30,9 +24,7 @@ export default createStore({
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
 
-    products: <Product[]>[
-      
-    ],
+    products: <Product[]>[],
   },
   getters: {
     categories(state) {

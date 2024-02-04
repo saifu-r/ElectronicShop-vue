@@ -28,7 +28,7 @@ a{
   transition: all 300ms ease;
   color: black;
   text-decoration: none;
-  text-decoration-color: rgb(238, 150, 50);
+  text-decoration-color: #58626e;
 }
 
 a:hover{
@@ -39,7 +39,7 @@ a:hover{
 }
 nav, .nav-links{
   display: flex;
-  background-color: #787e90;
+  background-color: #a1b3cb;
 }
 nav{
   justify-content: space-around;

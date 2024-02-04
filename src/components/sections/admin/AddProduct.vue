@@ -14,7 +14,7 @@
                         <option value="laptop">Laptop</option>
                         <option value="tv">TV</option>
                         <option value="headphone">Headphone</option>
-                        <option value="smart-watch">Smart Watch</option>
+                        <option value="smart watch">Smart Watch</option>
                         <option value="camera">Camera</option>
                         <option value="printer">Printer</option>
                         <option value="monitor">Monitor</option>

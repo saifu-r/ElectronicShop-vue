@@ -16,6 +16,10 @@
             <div class="section__product__price">
                 <base-badge :title='price' type="price"></base-badge>
             </div>
+            <div class="section__product__order">
+                <base-button>Order Now</base-button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -34,6 +38,8 @@ export default defineComponent({
         onBeforeMount(()=>{
             selectedProduct.value= store.getters.products.find((product : Product)=> product.name=== props.prodName) || null
         })
+
+        
 
         const brand= computed(()=>{
             return selectedProduct.value?.brand || ''
