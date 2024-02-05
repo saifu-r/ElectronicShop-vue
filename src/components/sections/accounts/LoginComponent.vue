@@ -17,7 +17,7 @@
 
             <div class="lower-container">
                 <base-button mode="outline" @click.prevent="submitForm">Login</base-button>
-                <base-button>Login With Google</base-button>
+                <base-button @click.prevent="loginWithGoogle">Login With Google</base-button>
                 <p>---------- Don't have an account? ----------</p>
                 <base-button @click="toggleComponent">Create Your Account</base-button>
             </div>
@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import BaseButton from "@/components/ui/BaseButton.vue";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -50,9 +50,16 @@ export default defineComponent({
             }
 
             store.dispatch('loginUser', userData)
-
         }
-        return { toggleComponent,email, password, submitForm }
+
+        const loginWithGoogle= ()=>{
+            const user = computed(() => store.getters.userEmail);
+            console.log('the user is: '+ user.value);
+            const token = computed(() => store.getters.token);
+            console.log('the token is: '+ token.value);
+        }
+
+        return { toggleComponent,email, password, submitForm, loginWithGoogle }
     },
 });
 </script>

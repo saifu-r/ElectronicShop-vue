@@ -1,10 +1,12 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
+import { collection, getDocs, getDoc, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage";
-import {getAuth, createUserWithEmailAndPassword} from "firebase/auth"
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth"
 import { db, storage } from "@/firebase";
 import Product from '@/types/Product'
+import router from "@/router";
+import { useRoute } from "vue-router";
 
 export default createStore({
   state: {
@@ -12,8 +14,8 @@ export default createStore({
       { image: require("../assets/category/phone.png"), title: "Phone" },
       { image: require("../assets/category/laptop.png"), title: "Laptop" },
       { image: require("../assets/category/tv.png"), title: "TV" },
-      { image: require("../assets/category/headphone.png"),title: "Headphone"},
-      { image: require("../assets/category/smartwatch.png"),title: "Smart Watch",},
+      { image: require("../assets/category/headphone.png"), title: "Headphone"},
+      { image: require("../assets/category/smartwatch.png"), title: "Smart Watch",},
       { image: require("../assets/category/camera.png"), title: "Camera" },
       { image: require("../assets/category/printer.png"), title: "Printer" },
       { image: require("../assets/category/monitor.png"), title: "Monitor" },
@@ -21,9 +23,9 @@ export default createStore({
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
     products: <Product[]>[],
+    userEmail: null,
+    token: null,
 
-    user: null,
-    
   },
 
 
@@ -34,8 +36,11 @@ export default createStore({
     products(state) {
       return state.products;
     },
-    user(state) {
-      return state.user;
+    userEmail(state) {
+      return state.userEmail;
+    },
+    token(state) {
+      return state.token;
     },
   },
 
@@ -57,9 +62,10 @@ export default createStore({
           productToUpdate.topProduct = !productToUpdate.topProduct; // Toggle the value
       }
     },
-    registerUser(state, payload){
-      state.user= payload
-    }
+    setUser(state, payload) {
+      state.userEmail = payload.userEmail;
+      state.token = payload.token;
+    },
   },
 
 
@@ -160,8 +166,35 @@ export default createStore({
         });
 
         // Handle successful registration
-        context.commit('registerUser', user);
+        context.commit('setUser', {
+          token: user.getIdToken(),
+          userEmail: user.email,
+
+        });
+
         console.log('User registered successfully.');
+
+    } catch (error) {
+      console.error('Error updating topProduct:', error);
+    }
+  },
+
+  async loginUser(context, payload) {
+    try {
+      const route= useRoute()
+      // Sign in with Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(getAuth(), payload.email, payload.password);
+      const user = userCredential.user;
+
+      context.commit('setUser', {
+          token: user.to,
+          userEmail: user.email,
+
+        });
+
+      console.log('User logged in successfully.');
+      router.replace('/gadget-shop')
+
     } catch (error) {
       console.error('Error updating topProduct:', error);
     }

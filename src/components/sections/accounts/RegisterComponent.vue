@@ -68,7 +68,7 @@ export default defineComponent({
             return `${firstName.value} ${lastName.value}`
         })
 
-        const register= ()=>{
+        const register= async()=>{
             const userData= {
                 name: fullName.value,
                 email: email.value,
@@ -77,6 +77,10 @@ export default defineComponent({
             }
 
             store.dispatch('registerUser', userData)
+
+            const user= await store.getters.user
+             console.log('the user is: '+ user);
+            
         }
 
         
