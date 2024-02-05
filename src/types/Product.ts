@@ -6,6 +6,7 @@ interface Product {
     brand: string;
     imageUrl: string;
     timestamp: string;
+    topProduct: boolean
   }
 
   export default Product

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import ProductDetails from '../components/sections/item/ProductDetails.vue'
 import Product from '@/types/Product'
@@ -23,20 +23,28 @@ export default defineComponent({
     props: ['category'],
     setup(props) {
         const store = useStore()
-        const route= useRoute()
+        const route = useRoute()
+
+        onBeforeMount(async () => {
+            try {
+                await store.dispatch('fetchProducts'); // Adjust the action name as per your store setup
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        });
         const products = computed<Product[]>(() => store.getters.products);
 
         const filteredProducts = computed<Product[]>(() => {
             return store.getters.products.filter((product: Product) => product.category.toLowerCase() === props.category.toLowerCase()) || null;
         });
 
-        const singleProduct= (name: string)=>{
+        const singleProduct = (name: string) => {
             // alert(name)
-            router.replace('/gadget-shop/'+ name)
+            router.replace('/gadget-shop/' + name)
 
         }
 
-       
+
         return { products, filteredProducts, singleProduct }
     }
 

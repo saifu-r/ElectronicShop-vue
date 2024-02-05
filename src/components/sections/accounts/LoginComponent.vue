@@ -1,36 +1,40 @@
 <template>
     <base-card>
-        <form @submit.prevent="submitForm">
+        <form >
             <div class="upper-container">
                 <div class="header">
                     <h3>Login Account</h3>
                 </div>
                 <div class="form-control">
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Email" v-model="email">
+                    <input type="email" name="email" id="email" placeholder="Email" v-model.trim="email">
                 </div>
                 <div class="form-control">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" v-model="password">
+                    <input type="password" name="password" id="password" v-model.trim="password">
                 </div>
             </div>
 
             <div class="lower-container">
-                <button>Login</button>
+                <base-button mode="outline" @click.prevent="submitForm">Login</base-button>
+                <base-button>Login With Google</base-button>
                 <p>---------- Don't have an account? ----------</p>
-                <button @click="toggleComponent">Create Your Account</button>
+                <base-button @click="toggleComponent">Create Your Account</base-button>
             </div>
         </form>
     </base-card>
 </template>
 
 <script lang="ts">
+import BaseButton from "@/components/ui/BaseButton.vue";
 import { defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
+  components: { BaseButton },
     emit: ['toggle-component'],
     setup(context, { emit }) {
-
+        const store = useStore()
         const component = ref('register-component')
         const toggleComponent = () => {
             emit('toggle-component', component.value)
@@ -40,8 +44,12 @@ export default defineComponent({
         const password= ref('')
 
         const submitForm = () => {
-            console.log('the password is '+ password.value);
+            const userData= {
+                email: email.value,
+                password: password.value,
+            }
 
+            store.dispatch('loginUser', userData)
 
         }
         return { toggleComponent,email, password, submitForm }

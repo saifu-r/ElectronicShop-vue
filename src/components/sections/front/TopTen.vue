@@ -1,7 +1,7 @@
 <template>
   <div class="title__container">
     <div class="title">
-      <h2>Top Ten Products</h2>
+      <h2>Top Products</h2>
     </div>
     <div class="sub-title">
       <h4>Seize the Best Products with Exceptional Deals!</h4>
@@ -10,7 +10,7 @@
 
   <div class="container">
     <router-link :to="productDetails">
-      <base-card mode="modified" v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
+      <base-card mode="modified" v-for="(product, index) in filteredProducts" :key="index" @click="showDetails(product.name)">
         <template #category>
           <div class="card">
             <img :src='product.imageUrl' alt='image' style="width: 150px;" />
@@ -42,6 +42,10 @@ export default defineComponent({
       fetchData();
     });
 
+    const filteredProducts = computed<Product[]>(() => {
+            return store.getters.products.filter((product: Product) => product.topProduct === true) || null;
+        });
+
     const productName = ref('')
     const showDetails = (prodName: string) => {
       productName.value = prodName
@@ -51,7 +55,7 @@ export default defineComponent({
       return '/gadget-shop/' + productName.value
     })
 
-    return { products, showDetails, productDetails }
+    return { products, showDetails, productDetails, filteredProducts }
 
 
   },

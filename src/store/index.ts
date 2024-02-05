@@ -1,13 +1,10 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc  } from "firebase/firestore";
-import Product from '@/types/Product'
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
+import { ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage";
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth"
 import { db, storage } from "@/firebase";
+import Product from '@/types/Product'
 
 export default createStore({
   state: {
@@ -23,9 +20,13 @@ export default createStore({
       { image: require("../assets/category/keyboard.png"), title: "Keyboard" },
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
-
     products: <Product[]>[],
+
+    user: null,
+    
   },
+
+
   getters: {
     categories(state) {
       return state.categories;
@@ -33,7 +34,12 @@ export default createStore({
     products(state) {
       return state.products;
     },
+    user(state) {
+      return state.user;
+    },
   },
+
+
   mutations: {
     fetchProducts(state, payload) {
       state.products = payload;
@@ -44,8 +50,18 @@ export default createStore({
     deleteProduct(state, payload) {
       state.products = state.products.filter(product => product.name !== payload);
     },
+    changeTop(state, payload) {
+      const productToUpdate = state.products.find(product => product.name === payload);
 
+      if (productToUpdate) {
+          productToUpdate.topProduct = !productToUpdate.topProduct; // Toggle the value
+      }
+    },
+    registerUser(state, payload){
+      state.user= payload
+    }
   },
+
 
   actions: {
     async fetchProducts(context) {
@@ -60,7 +76,6 @@ export default createStore({
       context.commit("fetchProducts", products);
     },
 
-
     async saveProduct(context, payload) {
       const fileName = `product_${Date.now()}_${payload.name}`;
       const storageReference = storageRef(storage, "products/" + fileName);
@@ -69,7 +84,6 @@ export default createStore({
         await uploadBytes(storageReference, payload.photo);
         const downloadURL = await getDownloadURL(storageReference);
         const productsCollection = collection(db, "products");
-
         const newProduct= {
           name: payload.name,
           price: payload.price,
@@ -78,8 +92,8 @@ export default createStore({
           brand: payload.brand,
           imageUrl: downloadURL,
           timestamp: Timestamp.now(),
+          topProduct: false
         }
-
         await addDoc(productsCollection, newProduct);
         console.log("File uploaded successfully. Download URL:", downloadURL);
         context.commit('saveProduct', newProduct)
@@ -97,7 +111,6 @@ export default createStore({
         const querySnapshot = await getDocs(
           query(productsCollection, where("name", "==", payload))
         );
-  
         // If a document is found, delete it
         if (querySnapshot.size > 0) {
           const productDoc = querySnapshot.docs[0];
@@ -111,6 +124,48 @@ export default createStore({
         console.error("Error deleting product:", error);
       }
     },
+
+    async changeTop(context, payload) {
+      try {
+          // Fetch the product document from Firestore
+          const productRef = collection(db, 'products');
+          const querySnapshot = await getDocs(productRef);
+          const productDoc = querySnapshot.docs.find(doc => doc.data().name === payload);
+          // Update the 'topProduct' field in Firestore
+          if (productDoc) {
+              await updateDoc(doc(db, 'products', productDoc.id), {
+                  topProduct: !productDoc.data().topProduct, // Toggle the value
+              });
+          }
+          // Commit the mutation to update the state
+          context.commit('changeTop', payload);
+      } catch (error) {
+          console.error('Error updating topProduct:', error);
+      }
+  },
+
+  async registerUser(context, payload) {
+    try {
+        // Create user in Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(getAuth(), payload.email, payload.password);
+        const user = userCredential.user;
+
+        // Store additional user information in Firestore
+        const usersCollection = collection(db, 'users');
+        await addDoc(usersCollection, {
+            uid: user.uid,
+            name: payload.name,
+            email: user.email,
+            phoneNumber: payload.phoneNumber,
+        });
+
+        // Handle successful registration
+        context.commit('registerUser', user);
+        console.log('User registered successfully.');
+    } catch (error) {
+      console.error('Error updating topProduct:', error);
+    }
+  },
   },
   modules: {},
 });

@@ -1,6 +1,6 @@
 <template>
     <base-card mode="normal">
-        <form @submit.prevent="submitForm">
+        <form>
             <div class="upper-container">
                 <div class="header">
                     <h3>Registration Account</h3>
@@ -9,32 +9,33 @@
                 <div class="name">
                     <div class="form-control">
                         <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" id="firstName" placeholder="First Name">
+                        <input type="text" name="firstName" id="firstName" placeholder="First Name" v-model.trim="firstName">
                     </div>
                     <div class="form-control">
                         <label for="lastName">Last Name</label>
-                        <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+                        <input type="text" name="lastName" id="lastName" placeholder="Last Name" v-model.trim="lastName">
                     </div>
                 </div>
 
                 <div class="name">
                     <div class="form-control">
                         <label for="email">Email</label>
-                        <input type="email" name="email" id="email" placeholder="Email">
+                        <input type="email" name="email" id="email" placeholder="Email" v-model.trim="email">
                     </div>
                     <div class="form-control">
                         <label for="password">Password</label>
-                        <input type="password" name="password" id="password">
+                        <input type="password" name="password" id="password" v-model.trim="password">
                     </div>
                 </div>
                 <div class="form-control">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="number" name="phoneNumber" id="phoneNumber" placeholder="Phone Number">
+                    <input type="number" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" v-model.trim="phoneNumber">
                 </div>
             </div>
 
             <div class="lower-container">
-                <button>Continue</button>
+                <base-button mode="outline" @click.prevent="register">Continue</base-button>
+                <base-button>Sign In With Google</base-button>
                 <p>---------- Already have an account? ----------</p>
                 <p>If you already have an account, please <b @click="toggleComponent">LOGIN</b></p>
             </div>
@@ -45,20 +46,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
     emit: ['toggle-component'],
     setup(context, { emit }) {
+        const store = useStore()
         const component = ref('login-component')
         const toggleComponent = () => {
             emit('toggle-component', component.value)
         }
 
-        const submitForm = () => {
-            console.log("hello");
+        const firstName= ref('')
+        const lastName= ref('')
+        const email= ref('')
+        const password= ref('')
+        const phoneNumber= ref('')
+
+        const fullName= computed(()=>{
+            return `${firstName.value} ${lastName.value}`
+        })
+
+        const register= ()=>{
+            const userData= {
+                name: fullName.value,
+                email: email.value,
+                password: password.value,
+                phoneNumber: phoneNumber.value
+            }
+
+            store.dispatch('registerUser', userData)
         }
-        return { submitForm, toggleComponent }
+
+        
+        return { toggleComponent, firstName, lastName, email, password, phoneNumber, register }
     },
 });
 </script>
@@ -69,8 +91,6 @@ export default defineComponent({
     flex-direction: column;
     align-items: flex-start;
 }
-
-
 
 .name {
     display: flex;

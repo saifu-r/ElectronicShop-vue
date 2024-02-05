@@ -32,31 +32,29 @@ import Product from '@/types/Product'
 export default defineComponent({
     props: ['prodName'],
     setup(props) {
-        const store = useStore()
-        const selectedProduct= ref<Product | null>(null)
+    const store = useStore();
+    const selectedProduct = ref<Product | null>(null);
 
-        onBeforeMount(()=>{
-            selectedProduct.value= store.getters.products.find((product : Product)=> product.name=== props.prodName) || null
-        })
+    // Use onBeforeMount to fetch data before the component is mounted
+    onBeforeMount(async () => {
+      try {
+        // Assuming store.getters.products involves asynchronous operations
+        await store.dispatch('fetchProducts'); // Adjust the action name as per your store setup
+        selectedProduct.value = store.getters.products.find(
+          (product: Product) => product.name === props.prodName
+        ) || null;
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    });
 
-        
+    const brand = computed(() => selectedProduct.value?.brand || '');
+    const description = computed(() => selectedProduct.value?.description || '');
+    const price = computed(() => 'Price: $' + (selectedProduct.value?.price || ''));
+    const image = computed(() => selectedProduct.value?.imageUrl || '');
 
-        const brand= computed(()=>{
-            return selectedProduct.value?.brand || ''
-        })
-        const description= computed(()=>{
-            return selectedProduct.value?.description || ''
-        })
-        const price= computed(()=>{
-            return 'Price: $' + (selectedProduct.value?.price || '')
-        })
-        const image= computed(()=>{
-            return selectedProduct.value?.imageUrl || ''
-        })
-
-        return {selectedProduct, brand, description, price, image}
-
-    },
+    return { selectedProduct, brand, description, price, image };
+  },
 });
 </script>
 

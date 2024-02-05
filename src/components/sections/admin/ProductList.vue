@@ -10,13 +10,15 @@
         <table>
             <thead>
                 <tr class="table-headings">
+                    <th>Top-Product</th>
                     <th>Product</th>
-                    <th>Price(TK)</th>
+                    <th>Price($)</th>
                     <th>Modify</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(product, index) in products" :key="index" @click="showDetails(product.name)">
+                    <td><input type="checkbox" name="topProduct" id="topProduct" v-model="product.topProduct" @click="changeTop(product.name)"></td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.price }}</td>
                     <td class="modification-buttons">
@@ -43,13 +45,14 @@
 import { ref, onMounted, computed, defineComponent } from "vue";
 import AddProduct from './AddProduct.vue'
 import { useStore } from "vuex";
+import Product from '@/types/Product'
 
 
 export default defineComponent({
     components: { AddProduct },
     setup() {
         const store = useStore();
-        const products = computed(() => store.getters.products);
+        const products = computed<Product[]>(() => store.getters.products);
         const tableName = "Product List";
         const openAddDialog = ref(false)
         const openDetailDialog = ref(false)
@@ -72,7 +75,9 @@ export default defineComponent({
         });
 
         const showDetails = (product: string) => {
-            alert(product)
+            // alert(product)
+            console.log(product);
+            
         }
 
         const editProduct = () => {
@@ -83,11 +88,17 @@ export default defineComponent({
             alert("Deleting: " + name);
             fetchData();
         }
+
+        const changeTop= (name: string)=>{
+            // alert(name)
+            store.dispatch('changeTop', name)
+            fetchData();
+        }
         return {
             tableName,
             addRow,
             openAddDialog,
-            confirmError, products, showDetails, editProduct, deleteProduct
+            confirmError, products, showDetails, editProduct, deleteProduct, changeTop
         };
     },
 });
@@ -124,6 +135,10 @@ td {
 .modification-buttons {
     display: flex;
     gap: 10px;
+}
+input{
+    margin: 0;
+    padding: 0;
 }
 </style>
   
