@@ -17,7 +17,7 @@
                 <base-badge :title='price' type="price"></base-badge>
             </div>
             <div class="section__product__order">
-                <base-button>Order Now</base-button>
+                <base-button @click="orderItem">Order Now</base-button>
             </div>
 
         </div>
@@ -28,6 +28,7 @@
 import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { useStore } from "vuex";
 import Product from '@/types/Product'
+import router from "@/router";
 
 export default defineComponent({
     props: ['prodName'],
@@ -38,11 +39,8 @@ export default defineComponent({
     // Use onBeforeMount to fetch data before the component is mounted
     onBeforeMount(async () => {
       try {
-        // Assuming store.getters.products involves asynchronous operations
         await store.dispatch('fetchProducts'); // Adjust the action name as per your store setup
-        selectedProduct.value = store.getters.products.find(
-          (product: Product) => product.name === props.prodName
-        ) || null;
+        selectedProduct.value = store.getters.products.find((product: Product) => product.name === props.prodName) || null;
       } catch (error) {
         console.error('Error fetching product details:', error);
       }
@@ -53,7 +51,17 @@ export default defineComponent({
     const price = computed(() => 'Price: $' + (selectedProduct.value?.price || ''));
     const image = computed(() => selectedProduct.value?.imageUrl || '');
 
-    return { selectedProduct, brand, description, price, image };
+    const orderItem= ()=>{
+        if(!store.getters.isAuthenticated){
+            router.replace('/account')
+        }else{
+            store.dispatch('placeOrder')
+            // alert('ordered')
+            
+        }
+    }
+
+    return { selectedProduct, brand, description, price, image, orderItem };
   },
 });
 </script>

@@ -75,10 +75,10 @@ export default defineComponent({
                 phoneNumber: phoneNumber.value
             }
 
-            store.dispatch('registerUser', userData)
+            await store.dispatch('registerUser', userData)
 
-            const user= await store.getters.user
-             console.log('the user is: '+ user);
+            const user= store.getters.user
+            console.log(user);
             
         }
 

@@ -1,10 +1,11 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs, getDoc, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth"
 import { db, storage } from "@/firebase";
 import Product from '@/types/Product'
+import Cart from '@/types/Cart'
 import router from "@/router";
 import { useRoute } from "vue-router";
 
@@ -26,6 +27,10 @@ export default createStore({
     userId: null,
     userEmail: null,
     token: null,
+
+    cart: <Cart[]>[],
+    totalSum: 0,
+    totalQty: 0
 
   },
 
@@ -49,6 +54,15 @@ export default createStore({
     isAuthenticated(state) {
       return !!state.token;
     },
+    cart(state){
+      return state.cart
+    },
+    totalSum(state){
+      return state.totalSum
+    },
+    totalQty(state){
+      return state.totalQty
+    }
   },
 
 
@@ -74,6 +88,9 @@ export default createStore({
       state.userEmail = payload.userEmail;
       state.token = payload.token;
     },
+    placeOrder(state){
+      state.totalQty ++
+    }
   },
 
 
@@ -246,6 +263,10 @@ export default createStore({
 
     router.replace('/gadget-shop')
   },
+
+  placeOrder(context){
+    context.commit('placeOrder')
+  }
 
   
   },

@@ -17,7 +17,7 @@
         <div class="cart">
             <img src="../../assets/cart.png" alt="cart.img">
             <h4>Cart</h4>
-            <div class="badge">0</div>
+            <div class="badge">{{ totalQty }}</div>
         </div>
 
     </nav>
@@ -33,8 +33,9 @@ export default defineComponent({
     const store = useStore();
 
     const isAuthenticated= computed(()=> store.getters.isAuthenticated)
+    const totalQty= computed(()=> store.getters.totalQty)
 
-    return {isAuthenticated}
+    return {isAuthenticated, totalQty}
   },
 });
 </script>
@@ -56,7 +57,7 @@ a:hover{
 }
 nav, .nav-links{
   display: flex;
-  background-color: #a1b3cb;
+  background-color: #8b9197;
 }
 nav{
   justify-content: space-around;
