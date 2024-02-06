@@ -1,4 +1,5 @@
 <template>
+    <base-spinner v-if="isLoading"></base-spinner>
     <base-card>
         <form >
             <div class="upper-container">
@@ -33,7 +34,8 @@ import { useStore } from "vuex";
 export default defineComponent({
   components: { BaseButton },
     emit: ['toggle-component'],
-    setup(context, { emit }) {
+    setup(_, { emit }) {
+        const isLoading= ref(false)
         const store = useStore()
         const component = ref('register-component')
         const toggleComponent = () => {
@@ -43,23 +45,28 @@ export default defineComponent({
         const email= ref('')
         const password= ref('')
 
-        const submitForm = () => {
+        const submitForm = async() => {
+            isLoading.value= true
             const userData= {
                 email: email.value,
                 password: password.value,
             }
 
-            store.dispatch('loginUser', userData)
+            await store.dispatch('loginUser', userData)
+
+            isLoading.value= false
         }
 
         const loginWithGoogle= ()=>{
-            const user = computed(() => store.getters.userEmail);
-            console.log('the user is: '+ user.value);
+            const userId = computed(() => store.getters.userId);
+            console.log('the userId is: '+ userId.value);
+            const userEmail = computed(() => store.getters.userEmail);
+            console.log('the userEmail is: '+ userEmail.value);
             const token = computed(() => store.getters.token);
             console.log('the token is: '+ token.value);
         }
 
-        return { toggleComponent,email, password, submitForm, loginWithGoogle }
+        return { toggleComponent,email, password, submitForm, loginWithGoogle, isLoading }
     },
 });
 </script>

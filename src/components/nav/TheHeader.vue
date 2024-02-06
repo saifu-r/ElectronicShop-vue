@@ -7,9 +7,10 @@
         </div>
         <div>
             <ul class="nav-links">
-                <li><router-link to="/offers">🔥Offers</router-link></li>
-                <li><router-link to="/account">🔐Account</router-link></li>
-                <li><router-link to="/offers">📞Contact</router-link></li>
+                <li><router-link to="/offers">Offers</router-link></li>
+                <li v-if="!isAuthenticated"><router-link to="/account">Account</router-link></li>
+                <li v-else><router-link to="/profile">Account</router-link></li>
+                <li><router-link to="/offers">Contact</router-link></li>
                 <li><router-link to="/admin">🔑</router-link></li>
               </ul>
         </div>
@@ -21,6 +22,22 @@
 
     </nav>
 </template>
+
+<script lang="ts">
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+
+
+export default defineComponent({
+  setup() {
+    const store = useStore();
+
+    const isAuthenticated= computed(()=> store.getters.isAuthenticated)
+
+    return {isAuthenticated}
+  },
+});
+</script>
 
 <style scoped>
 

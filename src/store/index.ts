@@ -23,6 +23,7 @@ export default createStore({
       { image: require("../assets/category/mouse.png"), title: "Mouse" },
     ],
     products: <Product[]>[],
+    userId: null,
     userEmail: null,
     token: null,
 
@@ -36,11 +37,17 @@ export default createStore({
     products(state) {
       return state.products;
     },
+    userId(state) {
+      return state.userId;
+    },
     userEmail(state) {
       return state.userEmail;
     },
     token(state) {
       return state.token;
+    },
+    isAuthenticated(state) {
+      return !!state.token;
     },
   },
 
@@ -63,6 +70,7 @@ export default createStore({
       }
     },
     setUser(state, payload) {
+      state.userId = payload.userId;
       state.userEmail = payload.userEmail;
       state.token = payload.token;
     },
@@ -165,14 +173,20 @@ export default createStore({
             phoneNumber: payload.phoneNumber,
         });
 
+        const token= user.getIdToken()
         // Handle successful registration
         context.commit('setUser', {
-          token: user.getIdToken(),
+          token: await token,
           userEmail: user.email,
-
+          userId: user.uid
         });
 
+        localStorage.setItem('userEmail', payload.email)
+        localStorage.setItem('userId', user.uid)
+        localStorage.setItem('token', await token)
+
         console.log('User registered successfully.');
+        router.replace('/gadget-shop')
 
     } catch (error) {
       console.error('Error updating topProduct:', error);
@@ -185,12 +199,17 @@ export default createStore({
       // Sign in with Firebase Authentication
       const userCredential = await signInWithEmailAndPassword(getAuth(), payload.email, payload.password);
       const user = userCredential.user;
-
+      
+      const token= user.getIdToken()
       context.commit('setUser', {
-          token: user.to,
+          token: await token,
           userEmail: user.email,
-
+          userId: user.uid
         });
+
+        localStorage.setItem('userEmail', payload.email)
+        localStorage.setItem('userId', user.uid)
+        localStorage.setItem('token', await token)
 
       console.log('User logged in successfully.');
       router.replace('/gadget-shop')
@@ -199,6 +218,36 @@ export default createStore({
       console.error('Error updating topProduct:', error);
     }
   },
+
+  tryLogin(context){
+    const userId= localStorage.getItem('userId')
+    const userEmail= localStorage.getItem('userEmail')
+    const token= localStorage.getItem('token')
+
+    if(token && userId && userEmail){
+      context.commit('setUser', {
+        token: token,
+        userId: userId,
+        userEmail: userEmail
+      })
+    }
+  },
+
+  logoutUser(context){
+
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userEmail')
+    context.commit('setUser', {
+      token: null,
+      userEmail: null,
+      userId: null
+    });
+
+    router.replace('/gadget-shop')
+  },
+
+  
   },
   modules: {},
 });

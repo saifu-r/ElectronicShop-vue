@@ -7,19 +7,26 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import TheHeader from "./components/nav/TheHeader.vue"
 import TheFooter from "./components/nav/TheFooter.vue"
 import TheNavbar from "./components/nav/TheNavbar.vue"
 import router from "./router";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components:{TheHeader, TheFooter, TheNavbar},
   setup() {
+    const store= useStore()
     const isAdminRoute = computed(() => {
-      // Assuming you have a way to determine if the current route is in the admin section
       return router.currentRoute.value.path.startsWith("/admin");
     });
+
+    onMounted(()=>{
+      store.dispatch('tryLogin')
+      console.log('hello');
+      
+    })
 
     return { isAdminRoute };
   },
@@ -66,3 +73,11 @@ html{
   background-color: #555;
 }
 </style>
+
+function created(arg0: () => void) {
+  throw new Error("Function not implemented.");
+}
+
+function created(arg0: () => void) {
+  throw new Error("Function not implemented.");
+}

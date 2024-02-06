@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-control">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="number" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" v-model.trim="phoneNumber">
+                    <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" v-model.trim="phoneNumber">
                 </div>
             </div>
 
@@ -51,13 +51,12 @@ import { useStore } from "vuex";
 
 export default defineComponent({
     emit: ['toggle-component'],
-    setup(context, { emit }) {
+    setup(_, { emit }) {
         const store = useStore()
         const component = ref('login-component')
         const toggleComponent = () => {
             emit('toggle-component', component.value)
         }
-
         const firstName= ref('')
         const lastName= ref('')
         const email= ref('')
