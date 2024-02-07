@@ -1,10 +1,10 @@
 <template>
     <li>
       <div>
-        <img :src="image" :alt="title" />
+        <img src="../../../assets/cart.png" :alt="prodName" />
       </div>
       <div>
-        <h3>{{ title }}</h3>
+        <h3>{{ prodName }}</h3>
         <div class="item__data">
           <div>
             Price per Item:
@@ -26,7 +26,7 @@
   import { useStore } from "vuex";
   
   export default defineComponent({
-    props: ["prodId", "title", "image", "price", "qty"],
+    props: ["prodName", "price", "qty"],
     setup(props) {
       const store= useStore()
       const itemTotal= computed(()=>{
@@ -34,10 +34,11 @@
       })
   
       const removeItem= ()=>{
-          store.dispatch('removeToCartAction',{
-            productId: props.prodId,
-            
-          })
+
+        const name= {
+          prodName: props.prodName
+        }
+          store.dispatch('removeToCartAction', name)
       }
   
   
@@ -49,11 +50,11 @@
   
   <style scoped>
   li {
-    margin: 1rem auto;
+    /* margin: 1rem auto; */
     padding: 1rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     text-align: center;
-    max-width: 25rem;
+    width: 25rem;
   }
   
   img {

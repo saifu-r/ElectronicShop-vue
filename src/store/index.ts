@@ -358,7 +358,40 @@ export default createStore({
     } catch (error) {
       console.error('Error placing order: ', error)
     }
-}
+  },
+
+  async removeToCartAction({ commit, state }, name) {
+    try {
+      // Find the index of the item to be removed
+      const indexToRemove = state.element.findIndex(item => item.name === name.prodName);
+      
+      if (indexToRemove !== -1) {
+        // Update totalQty and totalSum before removing the item
+        state.totalQty -= state.element[indexToRemove].qty;
+        state.totalSum -= state.element[indexToRemove].price * state.element[indexToRemove].qty;
+        
+        // Remove the item from the element array
+        state.element.splice(indexToRemove, 1);
+
+        // Get userId from Vuex state
+        const userId = state.userId;
+
+        // Define the cart document reference
+        const cartRef = doc(db, `carts/${userId}`);
+
+        // Update the cart document in Firestore with the updated element, totalQty, and totalSum
+        await updateDoc(cartRef, {
+          element: state.element,
+          totalQty: state.totalQty,
+          totalSum: state.totalSum
+        });
+      } else {
+        console.log('Item not found in cart');
+      }
+    } catch (error) {
+      console.error('Error removing item from cart: ', error);
+    }
+  }
 
   
   },
