@@ -5,6 +5,7 @@ import UserAccount from '../pages/UserAccount.vue'
 import UserProfile from '../pages/UserProfile.vue'
 import AdminPanel from '../pages/AdminPanel.vue'
 import SingleProduct from '../pages/SingleProduct.vue'
+import UserCart from '../pages/UserCart.vue'
 import CategoryProducts from '../pages/CategoryProducts.vue'
 import ProductList from '../components/sections/admin/ProductList.vue'
 import CheckOrder from '../components/sections/admin/CheckOrder.vue'
@@ -21,6 +22,7 @@ const router = createRouter({
     {path: '/gadget-shop/c/:category', props: true, component: CategoryProducts},
     {path: '/offers', component: ItemOffers},
     {path: '/account', component: UserAccount},
+    {path: '/cart', component: UserCart},
     {path: '/profile', component: UserProfile, meta: {requiresAuth: true}},
     {path: '/admin', component: AdminPanel, 
     children: [

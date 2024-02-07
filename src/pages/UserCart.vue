@@ -1,31 +1,32 @@
 <template>
     <section>
       <h2>Your Cart</h2>
-      <h3>Total Amount: <base-badge mode="elegant">${{ cartTotal }}</base-badge></h3>
-      <ul>
+      <h3>Total Amount: <base-badge type="price" :title="price">${{ cartTotal }}</base-badge></h3>
+      <!-- <ul>
         
-      </ul>
+      </ul> -->
     </section>
   </template>
   
   <script lang="ts">
   import { computed, defineComponent } from "vue";
   import { useStore } from "vuex";
-  import CartItem from '../components/cart/CartItem.vue'
   
   export default defineComponent({
-    components: {CartItem},
+    components: {},
     setup() {
       const store= useStore()
       const cartTotal= computed(()=>{
-        return (store.getters.totalSum).toFixed(2)
+        return store.getters.totalSum
       })
   
       const cartItems= computed(()=>{
         return store.getters.items
       })
+
+      const price = computed(() => '$' + cartTotal.value )
   
-      return {cartTotal, cartItems}
+      return {cartTotal, cartItems, price}
     },
   });
   </script>

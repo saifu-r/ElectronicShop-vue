@@ -55,9 +55,12 @@ export default defineComponent({
         if(!store.getters.isAuthenticated){
             router.replace('/account')
         }else{
-            store.dispatch('placeOrder')
-            // alert('ordered')
-            
+            const product= {
+                name: props.prodName,
+                price: selectedProduct.value?.price,
+                qty: 1
+            }
+            store.dispatch('placeOrder', product)    
         }
     }
 

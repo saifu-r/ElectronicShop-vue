@@ -1,11 +1,11 @@
 import { ref } from "vue";
 import { createStore } from "vuex";
-import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc  } from "firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp, query, where, deleteDoc, updateDoc, doc, getDoc, setDoc  } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth"
 import { db, storage } from "@/firebase";
 import Product from '@/types/Product'
-import Cart from '@/types/Cart'
+import Element from '@/types/Element'
 import router from "@/router";
 import { useRoute } from "vue-router";
 
@@ -28,7 +28,7 @@ export default createStore({
     userEmail: null,
     token: null,
 
-    cart: <Cart[]>[],
+    element: <Element[]>[],
     totalSum: 0,
     totalQty: 0
 
@@ -54,8 +54,8 @@ export default createStore({
     isAuthenticated(state) {
       return !!state.token;
     },
-    cart(state){
-      return state.cart
+    element(state){
+      return state.element
     },
     totalSum(state){
       return state.totalSum
@@ -87,9 +87,14 @@ export default createStore({
       state.userId = payload.userId;
       state.userEmail = payload.userEmail;
       state.token = payload.token;
+      state.element= payload.element;
+      state.totalQty= payload.totalQty;
+      state.totalSum= payload.totalSum
     },
-    placeOrder(state){
-      state.totalQty ++
+    placeOrder(state, payload){
+      state.element.push(payload) 
+      state.totalQty += payload.qty
+      state.totalSum += +payload.price * payload.qty
     }
   },
 
@@ -175,7 +180,7 @@ export default createStore({
       }
   },
 
-  async registerUser(context, payload) {
+  async registerUser({ commit, state }, payload) {
     try {
         // Create user in Firebase Authentication
         const userCredential = await createUserWithEmailAndPassword(getAuth(), payload.email, payload.password);
@@ -190,12 +195,24 @@ export default createStore({
             phoneNumber: payload.phoneNumber,
         });
 
+        const cartRef = doc(db, `carts/${user.uid}`)
+
+        await setDoc(cartRef, {
+          element: state.element,
+          totalQty: state.totalQty,
+          totalSum: state.totalSum
+        });
+
+
         const token= user.getIdToken()
         // Handle successful registration
-        context.commit('setUser', {
+        commit('setUser', {
           token: await token,
           userEmail: user.email,
-          userId: user.uid
+          userId: user.uid,
+          element: state.element,
+          totalQty: state.totalQty,
+          totalSum: state.totalSum
         });
 
         localStorage.setItem('userEmail', payload.email)
@@ -210,18 +227,36 @@ export default createStore({
     }
   },
 
-  async loginUser(context, payload) {
+  async loginUser({ commit, state }, payload) {
     try {
-      const route= useRoute()
       // Sign in with Firebase Authentication
       const userCredential = await signInWithEmailAndPassword(getAuth(), payload.email, payload.password);
       const user = userCredential.user;
+
+      const cartRef = doc(db, `carts/${user.uid}`);
+      const cartSnapshot = await getDoc(cartRef);
       
+      const element= ref<Element[]>([])
+      const totalQty= ref()
+      const totalSum= ref()
+
+
+      if (cartSnapshot.exists()) {
+        const cartData = cartSnapshot.data();
+        element.value = cartData.element;
+        totalQty.value = cartData.totalQty;
+        totalSum.value = cartData.totalSum;
+      }
+
       const token= user.getIdToken()
-      context.commit('setUser', {
+      commit('setUser', {
           token: await token,
           userEmail: user.email,
-          userId: user.uid
+          userId: user.uid,
+          element: element.value,
+          totalQty: totalQty.value,
+          totalSum: totalSum.value,
+
         });
 
         localStorage.setItem('userEmail', payload.email)
@@ -236,16 +271,34 @@ export default createStore({
     }
   },
 
-  tryLogin(context){
+  async tryLogin(context){
     const userId= localStorage.getItem('userId')
     const userEmail= localStorage.getItem('userEmail')
     const token= localStorage.getItem('token')
+
+    const cartRef = doc(db, `carts/${userId}`);
+    const cartSnapshot = await getDoc(cartRef);
+    
+    const element= ref<Element[]>([])
+    const totalQty= ref()
+    const totalSum= ref()
+
+
+    if (cartSnapshot.exists()) {
+      const cartData = cartSnapshot.data();
+      element.value = cartData.element;
+      totalQty.value = cartData.totalQty;
+      totalSum.value = cartData.totalSum;
+    }
 
     if(token && userId && userEmail){
       context.commit('setUser', {
         token: token,
         userId: userId,
-        userEmail: userEmail
+        userEmail: userEmail,
+        element: element.value,
+        totalQty: totalQty.value,
+        totalSum: totalSum.value
       })
     }
   },
@@ -258,14 +311,41 @@ export default createStore({
     context.commit('setUser', {
       token: null,
       userEmail: null,
-      userId: null
+      userId: null,
+      element: <Element[]>[],
+      totalSum: 0,
+      totalQty: 0
     });
 
     router.replace('/gadget-shop')
   },
 
-  placeOrder(context){
-    context.commit('placeOrder')
+  async placeOrder({ commit, state }, product) {
+    try {
+      // Push product details to element array in Vuex state
+      commit('placeOrder', product)
+
+      // Get userId from Vuex state
+      const userId = state.userId
+
+      // Define the cart document reference
+      const cartRef = doc(db, `carts/${userId}`)
+
+      // Get the cart document
+      const cartSnapshot = await getDoc(cartRef);
+
+      if (cartSnapshot.exists()) {
+        // Update the existing cart document with updated element, totalQty, and totalSum
+        await updateDoc(cartRef, {
+          element: state.element,
+          totalQty: state.totalQty,
+          totalSum: state.totalSum
+        });
+      }
+
+    } catch (error) {
+      console.error('Error placing order: ', error)
+    }
   }
 
   
