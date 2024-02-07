@@ -322,14 +322,26 @@ export default createStore({
 
   async placeOrder({ commit, state }, product) {
     try {
-      // Push product details to element array in Vuex state
-      commit('placeOrder', product)
+      // Check if the product is already in the cart
+      const existingProductIndex = state.element.findIndex(item => item.name === product.name);
+
+      // If the product is already in the cart, update its quantity
+      if (existingProductIndex !== -1) {
+        state.element[existingProductIndex].qty += product.qty;
+      } else {
+        // If the product is not in the cart, add it as a new product
+        state.element.push(product);
+      }
+
+      // Update totalQty and totalSum in Vuex state
+      state.totalQty += product.qty;
+      state.totalSum += product.price * product.qty;
 
       // Get userId from Vuex state
-      const userId = state.userId
+      const userId = state.userId;
 
       // Define the cart document reference
-      const cartRef = doc(db, `carts/${userId}`)
+      const cartRef = doc(db, `carts/${userId}`);
 
       // Get the cart document
       const cartSnapshot = await getDoc(cartRef);
@@ -346,7 +358,7 @@ export default createStore({
     } catch (error) {
       console.error('Error placing order: ', error)
     }
-  }
+}
 
   
   },
