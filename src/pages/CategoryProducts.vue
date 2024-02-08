@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h1>Category Products</h1>
-        <p>{{ category }}</p>
+        <h2>{{ category }}</h2>
     </div>
     <product-details v-for="(product, index) in filteredProducts" :key="index" :name="product.name"
         :category='product.category' :brand='product.brand' :description="product.description" :image-Url="product.imageUrl"
@@ -53,4 +53,18 @@ export default defineComponent({
 
 
 
-<style scoped></style>
+<style scoped>
+h1 {
+  color: #292929;
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  border-width: 80%;
+  padding-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+</style>

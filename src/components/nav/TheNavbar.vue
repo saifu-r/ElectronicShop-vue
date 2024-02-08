@@ -209,5 +209,12 @@ a.router-link-active{
 .line3-open {
     transform: rotate(45deg) translate(-6px, -6px);
 }
+
+@media only screen and (max-width: 500px) {
+    nav{
+        width: 90%;
+    }
+
+}
 </style>
 

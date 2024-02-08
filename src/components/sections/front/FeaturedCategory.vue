@@ -10,7 +10,7 @@
 
   <div class="container">
     <router-link :to="categoryProducts">
-    <base-card mode="modified" v-for="category in categories" :key="category" @click="showCategory(category.title)">
+    <base-card  mode="modified" v-for="category in categories" :key="category" @click="showCategory(category.title)">
       <template #category>
         <div class="card">
           <img :src="category.image" alt="image" />
@@ -98,6 +98,15 @@ export default defineComponent({
 
 .card h3{
   background-color: #fff;
+}
+
+@media only screen and (max-width: 900px){
+  .card{
+    padding: 25px;
+  }
+  .card img{
+    height: 3rem;
+  }
 }
 
 </style>

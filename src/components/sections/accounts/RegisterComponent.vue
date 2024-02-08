@@ -134,4 +134,17 @@ b {
     color: blue;
     cursor: pointer;
 }
+
+@media only screen and (max-width: 900px){
+    .name{
+        flex-direction: column;
+    }
+    .upper-container{
+        align-items: center;
+    }
+}
+@media only screen and (max-width: 700px){
+
+}
+
 </style>

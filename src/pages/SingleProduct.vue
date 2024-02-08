@@ -88,4 +88,31 @@ export default defineComponent({
     gap: 40px;
     width: 700px;
 }
+
+@media only screen and (max-width: 1200px){
+  .section__product__description{
+    max-width: 400px;
+  }
+}
+
+@media only screen and (max-width: 900px){
+  .container{
+    flex-direction: column;
+    padding: 10px 0px;
+    justify-content: center;
+    align-items: center;
+  }
+  .section__image img{
+
+    width: 300px;
+    height: 300px;
+
+  }
+  .section__details{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+}
 </style>

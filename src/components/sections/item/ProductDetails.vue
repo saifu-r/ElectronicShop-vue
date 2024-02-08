@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   props: ['name', 'category', 'brand', 'description', 'imageUrl', 'price', 'timestamp'],
@@ -38,8 +38,8 @@ export default defineComponent({
 .container {
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
     padding: 20px 100px;
-    gap: 40px;
     border-bottom: 1px solid black;
     margin: 20px;
 }
@@ -53,7 +53,34 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 700px;
+
+}
+.section__product__description{
+  max-width: 600px;
+}
+
+@media only screen and (max-width: 1200px){
+  .section__product__description{
+    max-width: 400px;
+  }
+}
+
+@media only screen and (max-width: 900px){
+  .container{
+    flex-direction: column;
+    padding: 10px 0px;
+    justify-content: center;
+  }
+  .section__image{
+    display: flex;
+    justify-content: center;
+  }
+  .section__details{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
 }
 </style>
 

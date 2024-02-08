@@ -15,7 +15,7 @@
 
     </div>
     <router-view></router-view>
-  </template>
+</template>
 
 
 <script lang="ts">
@@ -23,26 +23,26 @@ import { defineComponent, ref } from "vue";
 
 export default defineComponent({
     setup() {
-    const isMobileMenuOpen = ref(false);
-    const searchText = ref('');
+        const isMobileMenuOpen = ref(false);
+        const searchText = ref('');
 
-    const toggleMobileMenu = () => {
-      isMobileMenuOpen.value = !isMobileMenuOpen.value;
-    };
+        const toggleMobileMenu = () => {
+            isMobileMenuOpen.value = !isMobileMenuOpen.value;
+        };
 
-    return {
-      isMobileMenuOpen,
-      toggleMobileMenu,
-      searchText,
-    };
-  },
+        return {
+            isMobileMenuOpen,
+            toggleMobileMenu,
+            searchText,
+        };
+    },
 });
 </script>
 
 <style scoped>
 /* Add your styling here */
 
-.container{
+.container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -51,11 +51,34 @@ export default defineComponent({
     height: 80vh;
     background-color: white;
 }
-.sub-container img{
+
+.sub-container img {
     height: 25rem;
     width: 25rem;
 }
-.desc{
+
+.desc {
     width: 20rem;
 }
+
+@media only screen and (max-width: 1000px) {
+    .container {
+        margin-top: 50px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sub-container img {
+        height: 15rem;
+        width: 15rem;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .container{
+        margin-top: 0px;
+        margin-left: 30px;
+    }
+}
+
 </style>
