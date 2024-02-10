@@ -2,13 +2,13 @@
   <div class="home">
     <div class="section__text">
       <div class="section__text__title">
-        <h1>The new-tech gift you are wishing for is right here</h1>
+        <h1>The <strong>new-tech</strong> gift you are wishing for is right here</h1>
       </div>
       <div class="section__text__para">
         <p>Step into the Future</p>
       </div>
       <div class="section__text__action">
-        <base-button mode="outline">Browse Now--</base-button>
+        <base-button mode="browse">Browse Now--</base-button>
       </div>
     </div>
     <div class="section__image">
@@ -22,32 +22,40 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-
+  align-items: center;
   gap: 5rem;
   height: 80vh;
-  background-color: white;
+  background-color: #f2f4f8;
 }
 
 .section__text {
+  display: flex;
+  flex-direction: column;
   align-self: center;
   text-align: center;
   width: 25rem;
+  gap: 30px;
+
 }
 
 .section__text__title h1 {
   font-weight: 200;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 .section__text__para {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.5rem;
   margin: 15px;
+
 }
 
 .section__image img {
   height: 30rem;
   width: 30rem;
+}
+strong{
+  color: #D80032;
 }
 
 @media only screen and (max-width: 1200px) {

@@ -68,10 +68,25 @@ button:active {
   border-radius: 20px;
 }
 .browse {
-  background-color: transparent;
-  border-color: rgb(80, 80, 247);
+  border-radius: 10px;
+  background-color: #D80032;
 
 }
+
+.browse:hover{
+  background-color: #ca3155;
+}
+.login {
+  border-radius: 10px;
+  background-color: #0079FF;
+
+}
+
+.login:hover{
+  background-color: #0077ff;
+}
+
+
 
 .flat:hover,
 .flat:active,

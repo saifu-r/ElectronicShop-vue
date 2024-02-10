@@ -10,17 +10,18 @@
       <div>
         <ul class="nav-links">
           <li><router-link to="/offers">Offers</router-link></li>
-          <li v-if="!isAuthenticated"><router-link to="/account">Account</router-link></li>
-          <li v-else><router-link to="/profile">Account</router-link></li>
+          <li><router-link to="/offer">About</router-link></li>
           <li><router-link to="/offers">Contact</router-link></li>
-          <li><router-link to="/admin">🔑</router-link></li>
         </ul>
       </div>
       <div class="cart"><router-link to="/cart">
           <img src="../../assets/cart.png" alt="cart.img">
-          <h4>Cart</h4>
           <div class="badge">{{ totalQty }}</div>
         </router-link>
+      </div>
+      <div class="account">
+        <base-button mode="login" v-if="!isAuthenticated" link to="/account">Login</base-button>
+        <base-button mode="login" v-else link to="/profile">Login</base-button>
       </div>
     </div>
 
@@ -36,7 +37,6 @@
       <li v-if="!isAuthenticated"><router-link to="/account">Account</router-link></li>
       <li v-else><router-link to="/profile">Account</router-link></li>
       <li><router-link to="/offers">Contact</router-link></li>
-      <li><router-link to="/admin">🔑</router-link></li>
       <li><div class="cart"><router-link to="/cart">
           <img src="../../assets/cart.png" alt="cart.img">
           <h4>Cart</h4>
@@ -88,7 +88,7 @@ a:hover {
 nav,
 .nav-links {
   display: flex;
-  background-color: #8b9197;
+  background-color: #dee0e4;
 }
 
 nav {
@@ -111,21 +111,27 @@ nav {
   align-items: center;
   justify-content: space-between;
 }
-
-.logo {
-  font-size: 2rem;
+.list:nth-last-child(2){
+  gap: 80px;
 }
 
-.logo:hover {
+.logo {
+  font-size: 2.5rem;
+}
+
+.logo a:hover {
   cursor: default;
+  color: #D80032;
+  text-decoration: none;
 }
 
 .search-bar {
   display: flex;
   align-items: center;
   height: 6vh;
-  width: 60vh;
+  width: 50vh;
   border: 1px solid black;
+  border-radius: 10px;
   padding: 0 10px;
   background: white;
 
@@ -148,13 +154,12 @@ nav {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 6vh;
   padding: 5px;
   position: relative;
 }
 
 .cart img {
-  width: 20px;
+  width: 30px;
 }
 
 .badge {
@@ -169,7 +174,9 @@ nav {
   font-size: 12px;
   /* Adjust font size based on your design */
 }
-
+.account a{
+  text-decoration: none;
+}
 .hamburger img {
   width: 40px;
   display: none;

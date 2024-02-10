@@ -142,34 +142,37 @@ export default createStore({
       try {
         // Reference to the "products" collection
         const productsCollection = collection(db, "products");
-  
+    
         // Query the collection for the document with the specified name
         const querySnapshot = await getDocs(
           query(productsCollection, where("name", "==", name))
         );
-  
+    
         // If a document is found, delete it
         if (querySnapshot.size > 0) {
           const productDoc = querySnapshot.docs[0];
           await deleteDoc(productDoc.ref);
           console.log(`Product '${name}' deleted successfully.`);
-  
+    
           // Remove the product from every user's cart
-          // not working
           const usersCollection = collection(db, "users");
           const usersSnapshot = await getDocs(usersCollection);
           usersSnapshot.forEach(async userDoc => {
-            const userId = userDoc.id;
-            const cartRef = doc(db, `carts/${userId}`);
-            const cartSnapshot = await getDoc(cartRef);
-            if (cartSnapshot.exists()) {
-              const cartData = cartSnapshot.data();
-              const updatedElement = cartData.element.filter((item: Element) => item.name !== name);
-              await updateDoc(cartRef, { element: updatedElement });
-              console.log(`Product '${name}' removed from user '${userId}' cart.`);
+            try {
+              const userId = userDoc.id;
+              const cartRef = doc(db, `carts/${userId}`);
+              const cartSnapshot = await getDoc(cartRef);
+              if (cartSnapshot.exists()) {
+                const cartData = cartSnapshot.data();
+                const updatedElement = cartData.element.filter((item: Element) => item.name !== name);
+                await updateDoc(cartRef, { element: updatedElement });
+                console.log(`Product '${name}' removed from user '${userId}' cart.`);
+              }
+            } catch (error) {
+              console.error(`Error removing product '${name}' from user '${userDoc.id}' cart:`, error);
             }
           });
-  
+    
           // Commit the mutation to remove the product from the Vuex state
           commit('deleteProduct', name);
         } else {
