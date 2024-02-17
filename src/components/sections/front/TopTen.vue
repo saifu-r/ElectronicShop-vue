@@ -7,10 +7,12 @@
       <h4>Seize the Best Products with Exceptional Deals!</h4>
     </div>
   </div>
+  <base-spinner v-if="isLoading"></base-spinner>
 
   <div class="container">
     <router-link :to="productDetails">
-      <base-card mode="modified" v-for="(product, index) in filteredProducts" :key="index" @click="showDetails(product.name)">
+      <base-card mode="modified" v-for="(product, index) in filteredProducts" :key="index"
+        @click="showDetails(product.name)">
         <template #category>
           <div class="card">
             <img :src='product.imageUrl' alt='image' style="width: 150px;" />
@@ -32,10 +34,13 @@ import Product from '@/types/Product'
 export default defineComponent({
   setup() {
     const store = useStore()
+    const isLoading = ref(false)
     const products = computed<Product[]>(() => store.getters.products);
 
     const fetchData = async () => {
+      isLoading.value = true
       await store.dispatch('fetchProducts')
+      isLoading.value = false
     };
 
     onMounted(() => {
@@ -43,8 +48,8 @@ export default defineComponent({
     });
 
     const filteredProducts = computed<Product[]>(() => {
-            return store.getters.products.filter((product: Product) => product.topProduct === true) || null;
-        });
+      return store.getters.products.filter((product: Product) => product.topProduct === true) || null;
+    });
 
     const productName = ref('')
     const showDetails = (prodName: string) => {
@@ -55,7 +60,7 @@ export default defineComponent({
       return '/gadget-shop/' + productName.value
     })
 
-    return { products, showDetails, productDetails, filteredProducts }
+    return { products, showDetails, productDetails, filteredProducts, isLoading }
 
 
   },
@@ -63,9 +68,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-*{
+* {
   background-color: #f2f4f8;
 }
+
+h2 {
+  color: #D80032;
+}
+
 .title__container {
   display: flex;
   flex-direction: column;
@@ -75,7 +85,7 @@ export default defineComponent({
 
 }
 
-.container a{
+.container a {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -95,8 +105,9 @@ export default defineComponent({
   border-radius: 12px;
 }
 
-.card:hover{
+.card:hover {
   transform: scale(1.05);
+  color: #D80032;
 }
 
 .card h3 {
@@ -121,5 +132,4 @@ a {
   text-decoration: none;
   color: black;
 }
-
 </style>

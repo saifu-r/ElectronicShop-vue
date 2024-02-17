@@ -24,8 +24,6 @@ export default defineComponent({
 
     onMounted(()=>{
       store.dispatch('tryLogin')
-      console.log('hello');
-      
     })
 
     return { isAdminRoute };
@@ -61,6 +59,7 @@ html{
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
+  border-radius: 10px;
 }
 
 /* Track */

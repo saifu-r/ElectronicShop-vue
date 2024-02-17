@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <base-spinner v-if="isLoading"></base-spinner>
         <base-card>
             <form @submit.prevent="saveProduct">
                 <h2>Add a product</h2>
@@ -41,6 +42,9 @@
                     <label for="photo">Upload the product photo here:</label>
                     <input type="file" name="photo" id="photo" @change="handleFileChange" ref="fileInput">
                 </div>
+                <div class="error">
+                    <p v-if="!!error">{{ error }}</p>
+                </div>
                 <div class="lower-container">
                     <base-button>Add</base-button>
                 </div>
@@ -61,6 +65,7 @@ export default defineComponent({
         const selectedCategory = ref('')
         const selectedBrand = ref('')
         const availableBrands = ref<string[]>([]);
+        const isLoading= ref(false)
 
         const getBrandsForCategory = (category: string) => {
             switch (category) {
@@ -104,6 +109,7 @@ export default defineComponent({
         const selectedDescription = ref('')
         const selectedPrice = ref()
         const selectedPhoto = ref()
+        const error= ref('')
 
         const handleFileChange = (event: Event) => {
             const fileInput = event.target as HTMLInputElement;
@@ -112,6 +118,12 @@ export default defineComponent({
         }
 
         const saveProduct = () => {
+            isLoading.value= true
+            if(selectedName.value=== ''||selectedPrice.value=== ''||selectedBrand.value=== ''||selectedDescription.value=== ''|| selectedPrice.value=== ''||selectedPhoto.value=== ''){
+                isLoading.value= false
+                error.value= "Please fill up!!"
+                return
+            }
             const productData = {
                 name: selectedName.value,
                 price: selectedPrice.value,
@@ -121,8 +133,9 @@ export default defineComponent({
                 photo: selectedPhoto.value
             }
             store.dispatch('saveProduct', productData)
+            isLoading.value= false
         }
-        return { selectedName, selectedCategory, selectedBrand, availableBrands, updateBrands, selectedDescription, selectedPrice, selectedPhoto, handleFileChange, saveProduct }
+        return { selectedName, selectedCategory, selectedBrand, availableBrands, updateBrands, selectedDescription, selectedPrice, selectedPhoto, handleFileChange, saveProduct, isLoading, error }
     },
 });
 </script> 
@@ -156,5 +169,8 @@ button {
 
     padding: 12px;
     width: 300px;
+}
+.error p{
+    color: red;
 }
 </style>

@@ -56,6 +56,9 @@ export default defineComponent({
 *{
   background-color: #f2f4f8;
 }
+h2{
+  color: #D80032;
+}
 
 .title__container{
     display: flex;
@@ -89,6 +92,7 @@ export default defineComponent({
 
 .card:hover{
   transform: scale(1.05);
+  color: #D80032;
 }
 
 .card img{

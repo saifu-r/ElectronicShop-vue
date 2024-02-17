@@ -1,4 +1,5 @@
 <template>
+    <base-spinner v-if="isLoading"></base-spinner>
     <base-card mode="normal">
         <form>
             <div class="upper-container">
@@ -9,7 +10,8 @@
                 <div class="name">
                     <div class="form-control">
                         <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" id="firstName" placeholder="First Name" v-model.trim="firstName">
+                        <input type="text" name="firstName" id="firstName" placeholder="First Name"
+                            v-model.trim="firstName">
                     </div>
                     <div class="form-control">
                         <label for="lastName">Last Name</label>
@@ -29,13 +31,16 @@
                 </div>
                 <div class="form-control">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" v-model.trim="phoneNumber">
+                    <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Phone Number"
+                        v-model.trim="phoneNumber">
                 </div>
+                <p v-if="!!error">{{ error }}</p>
+
             </div>
 
             <div class="lower-container">
                 <base-button mode="outline" @click.prevent="register">Continue</base-button>
-                <base-button>Sign In With Google</base-button>
+                <base-button mode="login">Sign In With Google</base-button>
                 <p>---------- Already have an account? ----------</p>
                 <p>If you already have an account, please <b @click="toggleComponent">LOGIN</b></p>
             </div>
@@ -57,33 +62,55 @@ export default defineComponent({
         const toggleComponent = () => {
             emit('toggle-component', component.value)
         }
-        const firstName= ref('')
-        const lastName= ref('')
-        const email= ref('')
-        const password= ref('')
-        const phoneNumber= ref('')
+        const firstName = ref('')
+        const lastName = ref('')
+        const email = ref('')
+        const password = ref('')
+        const phoneNumber = ref('')
+        const error = ref('')
+        const isLoading = ref(false)
 
-        const fullName= computed(()=>{
+        const fullName = computed(() => {
             return `${firstName.value} ${lastName.value}`
         })
 
-        const register= async()=>{
-            const userData= {
-                name: fullName.value,
-                email: email.value,
-                password: password.value,
-                phoneNumber: phoneNumber.value
+        const register = async () => {
+            if (firstName.value === '' || lastName.value === '' || email.value === '' || password.value === '' || phoneNumber.value === '') {
+                error.value = 'Please fill in all fields.';
+                return
+            } else if (password.value.length < 6) {
+                error.value = 'Password should be at least 6 characters long.';
+                return
+            } else if (!email.value.includes('@')) {
+                error.value = 'Please enter a valid email address.';
+                return
+            } else if (phoneNumber.value.length !== 11) {
+                error.value = 'Phone number should be 11 digits long.';
+                return
             }
 
-            await store.dispatch('registerUser', userData)
+            try {
+                isLoading.value = true
+                const userData = {
+                    name: fullName.value,
+                    email: email.value,
+                    password: password.value,
+                    phoneNumber: phoneNumber.value
+                }
 
-            const user= store.getters.user
-            console.log(user);
-            
+                await store.dispatch('registerUser', userData)
+                isLoading.value = false
+                const user = store.getters.user
+                console.log(user);
+            } catch (err: any) {
+                error.value = err.message || 'Failed to authenticate, try again'
+                isLoading.value = false
+            }
+
         }
 
-        
-        return { toggleComponent, firstName, lastName, email, password, phoneNumber, register }
+
+        return { toggleComponent, firstName, lastName, email, password, phoneNumber, register, isLoading, error }
     },
 });
 </script>
@@ -131,20 +158,24 @@ button {
 }
 
 b {
-    color: blue;
+    color: #0079FF;
     cursor: pointer;
 }
+.upper-container p {
+    color: red;
+    display: flex;
+    justify-content: center;
+}
 
-@media only screen and (max-width: 900px){
-    .name{
+@media only screen and (max-width: 900px) {
+    .name {
         flex-direction: column;
     }
-    .upper-container{
+
+    .upper-container {
         align-items: center;
     }
 }
-@media only screen and (max-width: 700px){
 
-}
-
+@media only screen and (max-width: 700px) {}
 </style>

@@ -63,9 +63,9 @@ button:active {
 
 .outline {
   background-color: transparent;
-  border: 2px solid #184eb3;
-  color: #184eb3;
-  border-radius: 20px;
+  border: 2px solid #0079FF;
+  color: #0079FF;
+  border-radius: 10px;
 }
 .browse {
   border-radius: 10px;
@@ -85,13 +85,17 @@ button:active {
 .login:hover{
   background-color: #0077ff;
 }
+.outline:hover{
+  background-color: #0077ff;
+  color: #fff;
+}
+
+
 
 
 
 .flat:hover,
-.flat:active,
-.outline:hover,
-.outline:active {
+.flat:active {
   background-color: #edd2ff;
 }
 </style>

@@ -3,6 +3,7 @@
         <h1>Category Products</h1>
         <h2>{{ category }}</h2>
     </div>
+    <base-spinner v-if="isLoading"></base-spinner>
     <product-details v-for="(product, index) in filteredProducts" :key="index" :name="product.name"
         :category='product.category' :brand='product.brand' :description="product.description" :image-Url="product.imageUrl"
         :price="product.price" :timestamp="product.timestamp" @click="singleProduct(product.name)">
@@ -24,10 +25,13 @@ export default defineComponent({
     setup(props) {
         const store = useStore()
         const route = useRoute()
+        const isLoading= ref(false)
 
         onBeforeMount(async () => {
             try {
+                isLoading.value= true
                 await store.dispatch('fetchProducts'); // Adjust the action name as per your store setup
+                isLoading.value= false
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -45,7 +49,7 @@ export default defineComponent({
         }
 
 
-        return { products, filteredProducts, singleProduct }
+        return { products, filteredProducts, singleProduct, isLoading }
     }
 
 });

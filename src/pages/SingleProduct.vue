@@ -1,4 +1,5 @@
 <template>
+  <base-spinner v-if="isLoading"></base-spinner>
     <div class="container">
         <div class="section__image">
             <img :src="image" alt="image">
@@ -17,7 +18,7 @@
                 <base-badge :title='price' type="price"></base-badge>
             </div>
             <div class="section__product__order">
-                <base-button @click="orderItem">Order Now</base-button>
+                <base-button mode="login" @click="orderItem">Order Now</base-button>
             </div>
 
         </div>
@@ -34,12 +35,15 @@ export default defineComponent({
     props: ['prodName'],
     setup(props) {
     const store = useStore();
+    const isLoading= ref(false)
     const selectedProduct = ref<Product | null>(null);
 
     // Use onBeforeMount to fetch data before the component is mounted
     onBeforeMount(async () => {
       try {
+        isLoading.value= true
         await store.dispatch('fetchProducts'); // Adjust the action name as per your store setup
+        isLoading.value= false
         selectedProduct.value = store.getters.products.find((product: Product) => product.name === props.prodName) || null;
       } catch (error) {
         console.error('Error fetching product details:', error);
@@ -64,7 +68,7 @@ export default defineComponent({
         }
     }
 
-    return { selectedProduct, brand, description, price, image, orderItem };
+    return { selectedProduct, brand, description, price, image, orderItem,isLoading };
   },
 });
 </script>

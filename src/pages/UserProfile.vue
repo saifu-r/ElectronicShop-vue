@@ -3,7 +3,7 @@
 
     <p>The userId is : {{ userId }}</p>
     <p>The userEmail is : {{ userEmail }}</p>
-    <p>The token is : {{ token }}</p>
+    <!-- <p>The token is : {{ token }}</p> -->
 
     <base-button @click="logout">Logout</base-button>
 </template>
@@ -18,6 +18,8 @@ export default defineComponent({
     const userId= computed(()=>store.getters.userId)
     const userEmail= computed(()=>store.getters.userEmail)
     const token= computed(()=>store.getters.token)
+
+    
 
     const logout= ()=>{
         store.dispatch('logoutUser')

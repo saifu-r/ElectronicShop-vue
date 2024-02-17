@@ -1,16 +1,22 @@
 <template>
   <nav id="desktop-nav">
-    <div class="logo"><router-link to="/gadget-shop">GadgetTech</router-link></div>
+    <div class="logo"><router-link to="/gadget-shop">Gadgetn'Tech</router-link></div>
     <div class="list">
 
       <div class="search-bar">
-        <img src="../../assets/search.png" alt="search.img">
-        <input type="text" name="search" id="search" placeholder="search">
+        <input type="text" name="search" id="search" placeholder="search..." v-model="searchQuery">
+        <img src="../../assets/search.png" alt="search.img" @click="fetchKeywords">
       </div>
+
+      <ul v-if="suggestions.length > 0">
+        <li v-for="keyword in suggestions" :key="keyword">
+          {{ keyword }}
+        </li>
+      </ul>
       <div>
         <ul class="nav-links">
           <li><router-link to="/offers">Offers</router-link></li>
-          <li><router-link to="/offer">About</router-link></li>
+          <li><router-link to="/offers">About</router-link></li>
           <li><router-link to="/offers">Contact</router-link></li>
         </ul>
       </div>
@@ -34,21 +40,23 @@
   <div class="menu" v-if="isMenuAvailable">
     <ul class="menuUl">
       <li><router-link to="/offers">Offers</router-link></li>
-      <li v-if="!isAuthenticated"><router-link to="/account">Account</router-link></li>
-      <li v-else><router-link to="/profile">Account</router-link></li>
       <li><router-link to="/offers">Contact</router-link></li>
-      <li><div class="cart"><router-link to="/cart">
-          <img src="../../assets/cart.png" alt="cart.img">
-          <h4>Cart</h4>
-          <div class="badge">{{ totalQty }}</div>
-        </router-link>
-      </div></li>
+      <li v-if="!isAuthenticated"><router-link to="/account">Login</router-link></li>
+      <li v-else><router-link to="/profile">Login</router-link></li>
+      <li>
+        <div class="cart"><router-link to="/cart">
+            <img src="../../assets/cart.png" alt="cart.img">
+            <h4>Cart</h4>
+            <div class="badgeM">{{ totalQty }}</div>
+          </router-link>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 
@@ -65,7 +73,23 @@ export default defineComponent({
       isMenuAvailable.value = !isMenuAvailable.value
     }
 
-    return { isAuthenticated, totalQty, showMenu, isMenuAvailable }
+    const searchQuery = ref('')
+    const suggestions = ref([])
+
+    const fetchKeywords = () => {
+      // console.log(searchQuery);
+      
+      store.dispatch('fetchKeywords')
+      console.log(suggestions.value);
+
+    }
+
+    watch(searchQuery, () => {
+      store.commit('setSearchQuery', searchQuery.value);
+      fetchKeywords();
+    });
+
+    return { isAuthenticated, totalQty, showMenu, isMenuAvailable, searchQuery, suggestions, fetchKeywords }
   },
 });
 </script>
@@ -94,7 +118,7 @@ nav,
 nav {
   justify-content: space-around;
   align-items: center;
-  height: 12vh;
+  height: 80px;
 
 }
 
@@ -111,7 +135,8 @@ nav {
   align-items: center;
   justify-content: space-between;
 }
-.list:nth-last-child(2){
+
+.list:nth-last-child(2) {
   gap: 80px;
 }
 
@@ -139,9 +164,7 @@ nav {
 
 .search-bar img {
   width: 40px;
-  /* Adjust the width of the search icon */
   margin-right: 10px;
-  /* Adjust the spacing between the icon and input field */
 }
 
 #search {
@@ -174,24 +197,40 @@ nav {
   font-size: 12px;
   /* Adjust font size based on your design */
 }
-.account a{
+
+.badgeM {
+  position: absolute;
+  top: 0;
+
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  /* Adjust padding based on your design */
+  font-size: 12px;
+  /* Adjust font size based on your design */
+}
+
+.account a {
   text-decoration: none;
 }
+
 .hamburger img {
   width: 40px;
   display: none;
 }
 
-.menuUl a{
+.menuUl a {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   border-bottom: 1px solid black;
+  border-width: 80%;
   padding: 1rem 0;
   font-weight: bolder;
-  color: #fff;
-  background: #8b9197;
+  color: black;
+  background: #dee0e4;
 }
 
 @media only screen and (max-width: 1200px) {
@@ -204,5 +243,4 @@ nav {
   }
 
 
-}
-</style>
+}</style>

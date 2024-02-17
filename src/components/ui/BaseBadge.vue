@@ -46,7 +46,7 @@ export default defineComponent({
   color: white;
 }
 .price {
-  background-color: #8d006e;
+  background-color: #D80032;;
   color: white;
 }
 </style>
